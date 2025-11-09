@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises' import { scrapeMatchResult } from './scrapeMatch.js'
+import { scrapeMatchResult } from './scrapeMatch.js'
 import { initializeBrowser } from '../utils/initializeBrowser.js'
 import { writeData } from '../utils/writeFiles.js'
 
