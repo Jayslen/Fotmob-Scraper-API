@@ -1,43 +1,55 @@
-import fs from 'node:fs/promises'
-import { scrapeMatchResult } from './utils/scrapeMatch.js'
-import { initializeBrowser } from './utils/initializeBrowser.js'
+import inquirer from 'inquirer'
+import { program } from 'commander'
+import { Commands } from './commands/Commander.js'
+import { parseAnswers } from './utils/parseAnswers.js'
+import { LEAGUES_AVAILABLE } from './config.js'
+import { Actions } from './types/core.js'
 
-const { browser, page } = await initializeBrowser()
-
-for (let i = 0; i < 1; i++) {
-  await page.goto(
-    `https://www.fotmob.com/leagues/47/matches/premier-league?season=2024-2025&group=by-round&round=${i}`,
-    { waitUntil: 'load' }
+program
+  .name('Scrape Football Results')
+  .version('1.0.0')
+  .description(
+    '⚽ Welcome to Scrape Football Results! ⚽\n Get the latest scores and match data from your favorite leagues.'
   )
-  const matchesRound = { league: '', round: '', season: '', matches: [] }
-  const matchLinks = await page.$$eval('.e1mcimok0', (links) => {
-    return links.map((link) => link.getAttribute('href'))
-  })
 
-  for (const link of matchLinks) {
-    const response = page.waitForResponse(
-      (res) =>
-        res.url().includes('api/data/matchDetails') && res.status() === 200
-    )
-    await page.goto(`https://www.fotmob.com/${link}`, { waitUntil: 'load' })
-    console.log('Waiting for response...')
-    try {
-      const matchResponse = await response
-      const match = await scrapeMatchResult(matchResponse)
-      if (!matchesRound.league) {
-        matchesRound.league = match.details.league
-        matchesRound.round = match.details.round
-      }
-      //@ts-ignore
-      matchesRound.matches.push(match)
-    } catch {
-      console.log('Could not parse response as JSON')
+console.log('⚽ Ready to scrape football data!')
+
+program.action(async () => {
+  const { action, competition } = await inquirer.prompt([
+    {
+      type: 'list',
+      choices: Object.values(Actions),
+      name: 'action',
+      message: 'What you want to scrape'
+    },
+    {
+      type: 'list',
+      choices: LEAGUES_AVAILABLE.map((league) => league.name),
+      name: 'competition',
+      message: `Which competition do you want to scrape?`
     }
-  }
-  await fs.writeFile(
-    `./debug/${matchesRound.league}-round-${matchesRound.round}.json`,
-    JSON.stringify(matchesRound)
-  )
-}
+  ])
 
-await browser.close()
+  if (action === Actions.Matches) {
+    const answers = await inquirer.prompt([
+      {
+        type: 'list',
+        choices: ['2022-2023', '2023-2024', '2024-2025'],
+        name: 'season',
+        message: 'Which season do you want to scrape?'
+      },
+      {
+        type: 'input',
+        name: 'rounds',
+        message: 'Which rounds do you want to scrape? (e.g. 1-6 or 2)',
+        default: 'All'
+      }
+    ])
+    const parsed = parseAnswers({ ...answers, competition })
+    await Commands.ScrapeMatches({ ...parsed })
+  } else {
+    // TEAMS LOGIC
+  }
+})
+
+program.parseAsync()
