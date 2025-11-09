@@ -1,6 +1,7 @@
 {
   "name": "football-results-api",
   "version": "1.0.0",
+  "type": "module",
   "description": "A open source football API where the data are extract from Fotmob. The project is not intent to get beneficts with the data, its just for educational purpose and shared an API with dozens of people who wants to practice.",
   "main": "dist/index.js",
   "scripts": {
@@ -29,5 +30,8 @@
     "tsx": "4.20.6",
     "typescript": "5.9.3",
     "typescript-eslint": "8.46.3"
+  },
+  "dependencies": {
+    "playwright": "1.56.1"
   }
 }

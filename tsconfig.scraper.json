@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/scraper"
+  },
+  "include": ["src/scraper/**/*"],
+  "exclude": ["node_modules"]
+}
