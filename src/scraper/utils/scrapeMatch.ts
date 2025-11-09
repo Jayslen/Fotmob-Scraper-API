@@ -1,5 +1,5 @@
 import { Response } from 'playwright'
-import { AllStat, FluffyStats, ScrapeMatchData } from '../types/scraper.js'
+import { AllStat, ScrapeMatchData } from '../types/scraper.js'
 
 export async function scrapeMatchResult(matchResponse: Response) {
   const json = (await matchResponse.json()) as ScrapeMatchData
