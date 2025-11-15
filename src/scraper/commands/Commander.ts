@@ -2,6 +2,9 @@ import { scrapeMatchResult } from '../parse/parseMatchData.js'
 import { newPage } from '../utils/createNewPage.js'
 import { writeData } from '../utils/writeFiles.js'
 import { League, MatchParsed } from '../types/matchParsed.js'
+import { LEAGUES_AVAILABLE } from '../config.js'
+import { parseTeamData } from '../parse/parseTeamData.js'
+import { Area, Roles } from '../types/teamsParsed.js'
 
 export class Commands {
   static async ScrapeMatches(input: {
@@ -61,4 +64,63 @@ export class Commands {
     }
     await browser.close()
   }
+
+  static async ScrapeTeams(league: {
+    acrom: string
+    id: number
+    name: string
+  }) {
+    const { page, browser } = await newPage()
+    await page.goto(
+      `https://www.fotmob.com/leagues/${league.id}/table/${league.acrom}`
+    )
+    const teamsLinks = await page.$$eval('.elydtfc1', (anchors) =>
+      anchors.map((anchor) => anchor.getAttribute('href'))
+    )
+    const allTeams: {
+      name: any
+      players: {
+        name: string
+        birthDate: Date
+        country: string
+        transferValue: number | undefined
+        role: Roles
+        positions: string[] | undefined
+      }[]
+      trophies: {
+        name: string[]
+        area: Area[]
+        won: string[]
+        runnerup: string[]
+        season_won: string[]
+        season_runnerup: string[]
+      }[]
+    }[] = []
+
+    for (const team of teamsLinks) {
+      const response = page.waitForResponse(
+        (res) => res.url().includes('teams?id') && res.status() === 200
+      )
+      await page.goto(`https://www.fotmob.com/${team}`)
+      const json = await response
+      const teamData = await parseTeamData(json)
+
+      allTeams.push(teamData)
+      console.log(`${teamData.name} team scraped`)
+    }
+    await browser.close()
+    await writeData({
+      data: allTeams,
+      dir: `teams/${league.acrom}`,
+      fileName: `/${league.acrom}-teams.json`
+    })
+  }
+}
+
+const leagueToScrape = LEAGUES_AVAILABLE.find(
+  (league) => league.name === 'Premier League'
+)
+
+if (leagueToScrape) {
+  await Commands.ScrapeTeams(leagueToScrape)
 }
