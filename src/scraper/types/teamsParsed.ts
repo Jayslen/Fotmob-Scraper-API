@@ -3,6 +3,9 @@ export interface Team {
   history: {
     trophyList: TrophyList[]
   }
+  overview: {
+    venue: Venue
+  }
 }
 
 export interface Squad {
@@ -86,4 +89,15 @@ export enum Area {
 export enum Ccode {
   Esp = 'ESP',
   Int = 'INT'
+}
+
+export interface Venue {
+  widget: Widget
+  statPairs: Array<Array<number | string>>
+}
+
+export interface Widget {
+  name: string
+  location: string[]
+  city: string
 }
