@@ -1,5 +1,5 @@
 import { Response } from 'playwright'
-import { Team } from '../types/teamsParsed.js'
+import { Team } from '../types/teams.Fotmob.js'
 
 export async function parseTeamData(team: Response) {
   const teamScrapeData = await team.json()
@@ -12,8 +12,8 @@ export async function parseTeamData(team: Response) {
   const {
     Surface,
     Capacity,
-    openend
-  }: { Surface?: string; Capacity?: number; openend?: number } =
+    Openend
+  }: { Surface?: string; Capacity?: number; Openend?: number } =
     Object.fromEntries(venue.statPairs)
   return {
     name: teamScrapeData.details.name,
@@ -40,7 +40,7 @@ export async function parseTeamData(team: Response) {
       city: venue.widget.city,
       capacity: Capacity,
       surface: Surface,
-      opened: openend
+      opened: Openend
     }
   }
 }
