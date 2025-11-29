@@ -3,14 +3,14 @@ import { program } from 'commander'
 import { Commands } from './commands/Commander.js'
 import { parseAnswers } from './utils/parseAnswers.js'
 import { LEAGUES_AVAILABLE } from './config.js'
-import { Actions } from './types/core.js'
+import { Actions, InsertionEntity } from './types/core.js'
 
-program
-  .name('Scrape Football Results')
-  .version('1.0.0')
-  .description(
-    '⚽ Welcome to Scrape Football Results! ⚽\n Get the latest scores and match data from your favorite leagues.'
-  )
+// program
+//   .name('Scrape Football Results')
+//   .version('1.0.0')
+//   .description(
+//     '⚽ Welcome to Scrape Football Results! ⚽\n Get the latest scores and match data from your favorite leagues.'
+//   )
 
 console.log('⚽ Ready to scrape football data!')
 
@@ -70,13 +70,24 @@ program.action(async () => {
       await Commands.ScrapeTeams({
         acrom: league.acrom,
         id: league.id,
-        name: league.name
+        name: league.name,
+        country: league.country ?? ''
       })
     }
   }
 
   if (mainAction === 'Insert') {
+    const { entities } = await inquirer.prompt([
+      {
+        type: 'checkbox',
+        name: 'entities',
+        message: 'Which entity do you want to insert?',
+        choices: Object.values(InsertionEntity)
+      }
+    ])
+    await Commands.Insertion(entities)
+    process.exit()
   }
 })
 
-program.parseAsync()
+await program.parseAsync()

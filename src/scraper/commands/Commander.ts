@@ -1,10 +1,17 @@
+import { ResultSetHeader } from 'mysql2/promise'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { Area, Roles } from '../types/teams.Fotmob.js'
+import { League, MatchParsed } from '../types/Match.js'
+import { InsertionEntity } from '../types/core.js'
+import DB from '../dbInstance.js'
+import { parseValues } from '../parse/parseDbValues.js'
 import { scrapeMatchResult } from '../parse/parseMatchData.js'
+import { parseTeamData } from '../parse/parseTeamData.js'
 import { newPage } from '../utils/createNewPage.js'
 import { writeData } from '../utils/writeFiles.js'
-import { League, MatchParsed } from '../types/matchParsed.js'
-import { LEAGUES_AVAILABLE } from '../config.js'
-import { parseTeamData } from '../parse/parseTeamData.js'
-import { Area, Roles } from '../types/teamsParsed.js'
+import { generateQuery } from '../utils/generateQuery.js'
+import { dbTableInfo } from '../config.js'
 
 export class Commands {
   static async ScrapeMatches(input: {
@@ -69,34 +76,43 @@ export class Commands {
     acrom: string
     id: number
     name: string
+    country: string
   }) {
     const { page, browser } = await newPage()
     await page.goto(
       `https://www.fotmob.com/leagues/${league.id}/table/${league.acrom}`
     )
     console.log(`Starting scraping teams from ${league.name}`)
-    const teamsLinks = await page.$$eval('.elydtfc1', (anchors) =>
+    const teamsLinks = await page.$$eval('.e1ytqae11', (anchors) =>
       anchors.map((anchor) => anchor.getAttribute('href'))
     )
+
+    // type Team =
     const allTeams: {
-      name: any
-      players: {
-        name: string
-        birthDate: Date
-        country: string
-        transferValue: number | undefined
-        role: Roles
-        positions: string[] | undefined
+      country: string
+      teams: {
+        name: any
+        players: {
+          name: string
+          birthDate: Date
+          country: string
+          transferValue: number | undefined
+          role: Roles
+          positions: string[] | undefined
+        }[]
+        trophies: {
+          name: string[]
+          area: Area[]
+          won: string[]
+          runnerup: string[]
+          season_won: string[]
+          season_runnerup: string[]
+        }[]
       }[]
-      trophies: {
-        name: string[]
-        area: Area[]
-        won: string[]
-        runnerup: string[]
-        season_won: string[]
-        season_runnerup: string[]
-      }[]
-    }[] = []
+    } = {
+      country: league.country,
+      teams: []
+    }
 
     for (const team of teamsLinks) {
       const response = page.waitForResponse(
@@ -106,14 +122,41 @@ export class Commands {
       const json = await response
       const teamData = await parseTeamData(json)
 
-      allTeams.push(teamData)
+      allTeams.teams.push(teamData)
       console.log(`${teamData.name} team scraped`)
     }
     await browser.close()
     await writeData({
       data: allTeams,
-      dir: `teams/${league.acrom}`,
+      dir: `teams/`,
       fileName: `/${league.acrom}-teams.json`
     })
+  }
+
+  static async Insertion(entities: InsertionEntity[]) {
+    const db = await DB.getInstance()
+    for (const entity of entities) {
+      const { table, columns } = dbTableInfo[entity]
+      const values = await parseValues(entity)
+      const query = generateQuery(table, columns, values)
+      try {
+        const [results] = await db.query<ResultSetHeader>(query)
+        if (results.affectedRows > 0) {
+          console.log(`Inserted ${results.affectedRows} rows into ${entity}`)
+        } else {
+          console.log(`No rows inserted into ${entity}`)
+        }
+      } catch (error: any) {
+        const errorMsg = `Error inserting ${entity}: ${error.message}`
+        const errorsPath = path.join(process.cwd(), '/debug/logs-errors')
+        await fs.mkdir(errorsPath, { recursive: true })
+        console.error(errorMsg)
+        await fs.writeFile(
+          path.join(errorsPath, `error-${entity}.txt`),
+          `${errorMsg}\n${query}`
+        )
+      }
+    }
+    await db.end()
   }
 }

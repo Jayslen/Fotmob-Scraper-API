@@ -11,3 +11,11 @@ export enum Actions {
   Matches = 'Matches',
   Teams = 'Teams'
 }
+
+export enum InsertionEntity {
+  Country = 'countries',
+  Stadium = 'stadiums',
+  Teams = 'teams'
+  // Players,
+  // Positions
+}

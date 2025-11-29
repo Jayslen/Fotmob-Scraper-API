@@ -1,10 +1,14 @@
 export interface Teams {
+  country: string
+  teams: Team[]
+}
+
+export interface Team {
   name: string
   players: Player[]
   trophies: Trophy[]
   stadium: Stadium
 }
-
 export interface Player {
   name: string
   birthDate: Date
@@ -43,6 +47,7 @@ export interface Stadium {
   name: string
   city: string
   capacity?: number
+  opened?: number
   surface?: Surface
 }
 

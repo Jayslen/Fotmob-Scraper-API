@@ -2,7 +2,6 @@
 .env
 /dist
 /debug
-/errors
 /src/api
 /screenshots
 football-stats

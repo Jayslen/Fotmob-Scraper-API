@@ -6,6 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build/scraper": "tsc -p tsconfig.scraper.json",
+    "scrapper": "npx tsx ./src/scraper/main.ts",
+    "test/file": "npx tsx ./debug/test.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -34,6 +36,7 @@
   "dependencies": {
     "commander": "14.0.2",
     "inquirer": "12.11.0",
+    "mysql2": "3.15.3",
     "playwright": "1.56.1"
   }
 }
