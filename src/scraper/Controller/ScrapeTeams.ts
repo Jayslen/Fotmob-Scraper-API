@@ -14,7 +14,6 @@ export async function ScrapeTeamsController(league: ScrapeTeamsInput) {
     anchors.map((anchor) => anchor.getAttribute('href'))
   )
 
-  // type Team =
   const allTeams: {
     country: string
     teams: {

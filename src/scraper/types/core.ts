@@ -17,7 +17,6 @@ export enum InsertionEntity {
   Stadium = 'stadiums',
   Teams = 'teams',
   Players = 'players'
-  // Positions
 }
 
 export interface ScrapeMatchesInput {

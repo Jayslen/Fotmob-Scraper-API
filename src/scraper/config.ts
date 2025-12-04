@@ -23,7 +23,11 @@ export const LEAGUES_AVAILABLE: LeaguesAvailable = [
 
 export const dbTableInfo: Record<
   InsertionEntity,
-  { table: string; columns: string[] }
+  {
+    table: string
+    columns: string[]
+    dependenciesTables?: Record<string, { table: string; columns: string[] }>
+  }
 > = {
   countries: {
     table: 'countries',
@@ -54,6 +58,16 @@ export const dbTableInfo: Record<
       'market_value',
       'team_id',
       'country_id'
-    ]
+    ],
+    dependenciesTables: {
+      positions: {
+        table: 'positions',
+        columns: ['position_id', 'position']
+      },
+      playerPositions: {
+        table: 'player_positions',
+        columns: ['player_id', 'position_id']
+      }
+    }
   }
 }
