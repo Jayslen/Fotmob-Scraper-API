@@ -5,7 +5,7 @@ import { scapeQuote } from '../../utils/scapeSqlQuote.js'
 import { InsertionEntity } from '../../types/core.js'
 import { loadTeamsData } from '../parse/parseScrapedData.js'
 
-const { Country, Stadium, Teams, Players } = InsertionEntity
+const { Country, Stadium, Teams, Players, Matches } = InsertionEntity
 
 export async function handleInsertion(
   insertion: InsertionEntity,
@@ -13,12 +13,14 @@ export async function handleInsertion(
   columns: string[],
   dependenciesTables?: Record<string, { table: string; columns: string[] }>
 ) {
-  const data = await loadTeamsData()
+  const teamsData = await loadTeamsData()
   switch (insertion) {
     case Country:
       const values = [
         ...new Set(
-          data.flatMap((team) => team.players.map((player) => player.country))
+          teamsData.flatMap((team) =>
+            team.players.map((player) => player.country)
+          )
         )
       ].map((country) => [
         `UUID_TO_BIN('${randomUUID()}',1)`,
@@ -26,7 +28,7 @@ export async function handleInsertion(
       ])
       return await insertValues(table, columns, values, insertion)
     case Stadium:
-      const stadiums = data
+      const stadiums = teamsData
         .map((team) => team.stadium)
         .map((stadium) => [
           `UUID_TO_BIN('${randomUUID()}',1)`,
@@ -40,7 +42,7 @@ export async function handleInsertion(
     case Teams: {
       const teamsDB = await PreloadDB.countries()
       const stadiumDB = await PreloadDB.stadiums()
-      const teams = data.map((team) => [
+      const teams = teamsData.map((team) => [
         `UUID_TO_BIN('${randomUUID()}',1)`,
         scapeQuote(team.name),
         `UUID_TO_BIN('${teamsDB.get(team.country)}',1)`,
@@ -51,7 +53,7 @@ export async function handleInsertion(
     case Players: {
       const teamsDB = await PreloadDB.teams()
       const countriesDb = await PreloadDB.countries()
-      const players = data.flatMap((team) =>
+      const players = teamsData.flatMap((team) =>
         team.players.map((pl) => ({ ...pl, team: team.name }))
       )
       const playersValues = players.map((pl) => [
