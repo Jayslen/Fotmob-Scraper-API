@@ -6,7 +6,7 @@ import DB from '../../dbInstance.js'
 export async function insertValues(
   table: string,
   columns: string[],
-  values: any[],
+  values: (string | number | boolean)[][],
   entity: string
 ) {
   const query = generateQuery(table, columns, values)
@@ -33,7 +33,7 @@ export async function insertValues(
 function generateQuery(
   table: string,
   columns: string[],
-  values: (string | number)[][]
+  values: (string | number | boolean)[][]
 ) {
   return `
               INSERT IGNORE INTO ${table} (${columns.join(', ')}) VALUES \n
@@ -43,6 +43,7 @@ function generateQuery(
                     `(${valueSet
                       .map((value) =>
                         typeof value === 'number' ||
+                        typeof value === 'boolean' ||
                         value.startsWith('UUID_TO_BIN(') ||
                         value.startsWith('(SELECT') ||
                         value.startsWith('STR_TO_DATE(') ||

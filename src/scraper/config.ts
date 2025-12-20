@@ -69,5 +69,39 @@ export const dbTableInfo: Record<
         columns: ['player_id', 'position_id']
       }
     }
+  },
+  matches: {
+    table: 'matches',
+    columns: [
+      'match_id',
+      'home_team_id',
+      'visit_team_id',
+      'attendance',
+      'season',
+      'competition',
+      'match_week',
+      'match_date',
+      'stadium_id',
+      'is_neutral',
+      'was_game_finished',
+      'was_game_cancelled',
+      'first_half_started',
+      'second_half_started',
+      'first_half_ended',
+      'second_half_ended',
+      'highlights',
+      'referee_id',
+      'man_of_the_match'
+    ],
+    dependenciesTables: {
+      referee: {
+        table: 'referee',
+        columns: ['referee_id', 'referee_name']
+      },
+      competitions: {
+        table: 'competitions',
+        columns: ['league_id', 'league_name']
+      }
+    }
   }
 }

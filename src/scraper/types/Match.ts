@@ -1,5 +1,5 @@
 export interface MatchParsed {
-  league: League
+  league: string
   round: number
   season: string
   matches: Match[]
@@ -22,7 +22,7 @@ export interface Match {
 export interface Details {
   stadium: Stadium
   fullDate: Date
-  attendance: number
+  attendance?: number
   wasGameFinished: boolean
   wasGameCancelled: boolean
   firstHalfStarted: string
@@ -30,7 +30,7 @@ export interface Details {
   firstHalfEnded: string
   secondHalfEnded: string
   highlights: string
-  referee: string
+  referee?: string
   league: League
   round: string
 }

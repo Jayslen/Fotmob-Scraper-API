@@ -5,6 +5,9 @@ const stadiumsMap = new Map<string, string>()
 const teamsMap = new Map<string, string>()
 const positionsMap = new Map<string, string>()
 const playersMap = new Map<string, string>()
+const refereesMap = new Map<string, string>()
+const competitionsMap = new Map<string, string>()
+const seasonsMap = new Map<string, string>()
 
 export class PreloadDB {
   static async countries(): Promise<Map<string, string>> {
@@ -72,5 +75,41 @@ export class PreloadDB {
     )) as [{ player_id: string; player_name: string }[], []]
     rows.forEach((row) => playersMap.set(row.player_name, row.player_id))
     return playersMap
+  }
+
+  static async referees(refresh?: boolean) {
+    if (refereesMap.size > 0 && !refresh) {
+      return refereesMap
+    }
+    const db = await DB.getInstance()
+    const [rows] = (await db.query(
+      'SELECT BIN_TO_UUID(referee_id, 1) AS referee_id, referee_name FROM referee'
+    )) as [{ referee_id: string; referee_name: string }[], []]
+    rows.forEach((row) => refereesMap.set(row.referee_name, row.referee_id))
+    return refereesMap
+  }
+
+  static async competitions(refresh?: boolean) {
+    if (competitionsMap.size > 0 && !refresh) {
+      return competitionsMap
+    }
+    const db = await DB.getInstance()
+    const [rows] = (await db.query(
+      'SELECT BIN_TO_UUID(league_id, 1) AS league_id, league_name FROM competitions'
+    )) as [{ league_id: string; league_name: string }[], []]
+    rows.forEach((row) => competitionsMap.set(row.league_name, row.league_id))
+    return competitionsMap
+  }
+
+  static async seasons(refresh?: boolean) {
+    if (seasonsMap.size > 0 && !refresh) {
+      return seasonsMap
+    }
+    const db = await DB.getInstance()
+    const [rows] = (await db.query(
+      'SELECT BIN_TO_UUID(season_id, 1) AS season_id, season FROM seasons'
+    )) as [{ season_id: string; season: string }[], []]
+    rows.forEach((row) => seasonsMap.set(row.season, row.season_id))
+    return seasonsMap
   }
 }
