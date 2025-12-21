@@ -1,5 +1,5 @@
 import { Response } from 'playwright'
-import { Team } from '../../types/teams.Fotmob.js'
+import { Team } from '../types/teams.Fotmob.js'
 
 export async function parseTeamData(team: Response) {
   const teamScrapeData = await team.json()

@@ -1,4 +1,4 @@
-import { LEAGUES_AVAILABLE } from '../../config.js'
+import { LEAGUES_AVAILABLE } from '../config.js'
 
 export function parseAnswers(answers: any): {
   season: string

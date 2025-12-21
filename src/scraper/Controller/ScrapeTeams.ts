@@ -1,4 +1,4 @@
-import { parseTeamData } from '../helpers/parse/fotmob.parseTeam.js'
+import { parseTeamData } from '../parsers/fotmob.parseTeam.js'
 import { writeData } from '../utils/writeFiles.js'
 import { newPage } from '../utils/createNewPage.js'
 import { Area, Roles } from '../types/teams.Fotmob.js'

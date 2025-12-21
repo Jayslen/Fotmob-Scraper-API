@@ -1,7 +1,7 @@
 import inquirer from 'inquirer'
 import { program } from 'commander'
 import { Commands } from './commands/Commander.js'
-import { parseAnswers } from './helpers/parse/parseAnswers.js'
+import { parseAnswers } from './parsers/parseAnswers.js'
 import { LEAGUES_AVAILABLE } from './config.js'
 import { Actions, InsertionEntity } from './types/core.js'
 

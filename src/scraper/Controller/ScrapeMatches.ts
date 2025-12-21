@@ -1,4 +1,4 @@
-import { scrapeMatchResult } from '../helpers/parse/footmob.parseMatch.js'
+import { scrapeMatchResult } from '../parsers/footmob.parseMatch.js'
 import { newPage } from '../utils/createNewPage.js'
 import { writeData } from '../utils/writeFiles.js'
 import { MatchParsed } from '../types/Match.js'

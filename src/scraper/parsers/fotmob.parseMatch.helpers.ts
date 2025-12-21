@@ -5,7 +5,7 @@ import {
   Period,
   Reason,
   StatKeyCategory
-} from '../../types/Match.js'
+} from '../types/Match.js'
 import {
   AllStat,
   AwayTeam,
@@ -15,7 +15,7 @@ import {
   HomeTeamGoals,
   PlayerStat,
   StatsPeriods
-} from '../../types/match.Fotmob.js'
+} from '../types/match.Fotmob.js'
 
 // do this function with flatMap instead flat().map()
 export function parseGoalscorer(teamGoals: [HomeTeamGoals, AwayTeamGoals]) {

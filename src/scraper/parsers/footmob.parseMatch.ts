@@ -6,8 +6,8 @@ import {
   parseMatchTeamsStats,
   parsePlayerMatchStats
 } from './fotmob.parseMatch.helpers.js'
-import { ScrapeMatchData } from '../../types/match.Fotmob.js'
-import { League, Match, Surface } from '../../types/Match.js'
+import { ScrapeMatchData } from '../types/match.Fotmob.js'
+import { League, Match, Surface } from '../types/Match.js'
 
 export async function scrapeMatchResult(matchResponse: Response) {
   const json = (await matchResponse.json()) as ScrapeMatchData
