@@ -4,36 +4,21 @@ import { loadMatchesData } from '../../parsers/parseScrapedData.js'
 import { InsertionArgs, InsertionEntity } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../helpers/uuid.helper.js'
 import { scapeQuote } from '../helpers/scapeSqlQuote.js'
-import { dbTableInfo, LEAGUES_AVAILABLE } from '../../config.js'
+import { dbTableInfo } from '../../config.js'
+import { Preinsert } from '../helpers/preinsert.js'
 
 export async function insertMatches(input: InsertionArgs) {
   const matchesData = await loadMatchesData()
   const { table, columns, dependenciesTables } = input
 
+  await Preinsert.teams(matchesData)
   {
-    const teamsDb = await PreloadDB.teams()
     const stadiumsDb = await PreloadDB.stadiums()
-    const countriesDb = await PreloadDB.countries()
     const playersDb = await PreloadDB.players()
     const competitionsDb = await PreloadDB.competitions()
 
     const { Stadium, Players, Teams } = InsertionEntity
 
-    const teamsToAdd = Array.from(
-      new Map(
-        matchesData
-          .flatMap((matches) =>
-            matches.matches.flatMap((mt) =>
-              mt.teams.map((team) => ({
-                team,
-                competition: matches.league
-              }))
-            )
-          )
-          .filter(({ team }) => !teamsDb.has(team))
-          .map((item) => [item.team, item]) // key = team name
-      ).values()
-    )
     const stadiumsToAdd = Array.from(
       new Map(
         matchesData.flatMap((matches) =>
@@ -67,27 +52,6 @@ export async function insertMatches(input: InsertionArgs) {
       .map((mt) => mt.league)
       .filter((competition) => !competitionsDb.has(competition))
 
-    if (teamsToAdd.length > 0) {
-      const teamsTable = dbTableInfo[Teams]
-      const teamsValues = teamsToAdd.map(({ team, competition }) => {
-        const teamCountry = LEAGUES_AVAILABLE.find(
-          (lg) => lg.name.toLowerCase() === competition.toLowerCase()
-        )
-        const countryUUID = countriesDb.get(teamCountry?.country ?? '')
-        return [
-          newUUID(),
-          scapeQuote(team),
-          countryUUID ? uuidToSQLBinary(countryUUID) : 'NULL',
-          'NULL'
-        ]
-      })
-      await insertValues(
-        teamsTable.table,
-        teamsTable.columns,
-        teamsValues,
-        'teams'
-      )
-    }
     if (stadiumsToAdd.length > 0) {
       const stadiumTable = dbTableInfo[Stadium]
       const values = stadiumsToAdd.map(({ name, capacity, surface }) => {
