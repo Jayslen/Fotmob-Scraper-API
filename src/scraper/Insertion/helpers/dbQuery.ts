@@ -7,14 +7,15 @@ export async function insertValues(
   table: string,
   columns: string[],
   values: (string | number | boolean)[][],
-  entity: string
+  entity: string,
+  msg?: string
 ) {
   const query = generateQuery(table, columns, values)
   const db = await DB.getInstance()
   try {
     const [results] = await db.query<ResultSetHeader>(query)
     if (results.affectedRows > 0) {
-      console.log(`Inserted ${results.affectedRows} rows into ${entity}`)
+      console.log(msg ?? `Inserted ${results.affectedRows} rows into ${entity}`)
     } else {
       console.log(`No rows inserted into ${entity}`)
     }

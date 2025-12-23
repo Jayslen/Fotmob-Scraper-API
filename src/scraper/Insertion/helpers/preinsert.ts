@@ -29,7 +29,13 @@ export class Preinsert {
         'NULL'
       ]
     })
-    await insertValues(teamsTable.table, teamsTable.columns, values, 'teams')
+    await insertValues(
+      teamsTable.table,
+      teamsTable.columns,
+      values,
+      'teams',
+      `\t Inserted ${values.length} missing teams`
+    )
   }
   static async stadiums(matchesData: MatchParsed[]) {
     const stadiums = await PreinsertParser.parseStadiums(matchesData)
@@ -47,7 +53,13 @@ export class Preinsert {
         surface ?? 'NULL'
       ]
     })
-    await insertValues(table, columns, values, 'stadiums')
+    await insertValues(
+      table,
+      columns,
+      values,
+      'stadiums',
+      `\t Inserted ${values.length} missing stadiums`
+    )
   }
 
   static async players(matchesData: MatchParsed[]) {
@@ -67,31 +79,28 @@ export class Preinsert {
         'NULL'
       ]
     })
-    await insertValues(table, columns, values, 'players')
+    await insertValues(
+      table,
+      columns,
+      values,
+      'players',
+      `\t Inserted ${values.length} missing players`
+    )
   }
 
   // find a opmimal way to store all the schema into a object
   // without interfere with the 'dbTableInfo' object
   static async competitions(matchesData: MatchParsed[]) {
     const competitions = await PreinsertParser.parseCompetitions(matchesData)
-    if (!competitions.length) return
-
     const values = competitions.map((competition) => {
-      return [
-        newUUID(),
-        scapeQuote(competition),
-        'NULL',
-        'NULL',
-        'NULL',
-        'NULL',
-        'NULL'
-      ]
+      return [newUUID(), scapeQuote(competition)]
     })
     await insertValues(
       'competitions',
       ['league_id', 'league_name'],
       values,
-      'competitions'
+      'competitions',
+      `\t Inserted ${values.length} missing competitions`
     )
   }
 
@@ -99,8 +108,6 @@ export class Preinsert {
   // without interfere with the 'dbTableInfo' object
   static async referees(matchesData: MatchParsed[]) {
     const referees = await PreinsertParser.parseReferees(matchesData)
-    if (!referees.length) return
-
     const values = referees.map((referee) => {
       return [newUUID(), scapeQuote(referee)]
     })
@@ -108,18 +115,18 @@ export class Preinsert {
       'referee',
       ['referee_id', 'referee_name'],
       values,
-      'referees'
+      'referees',
+      `\t Inserted ${values.length} missing referees`
     )
   }
   static async seasons(matchesData: MatchParsed[]) {
     const seasons = [...new Set(matchesData.map((mt) => mt.season))]
-    if (!seasons.length) return
-
     await insertValues(
       'seasons',
       ['season_id', 'season'],
       seasons.map((season) => [newUUID(), season]),
-      'seasons'
+      'seasons',
+      `\t Inserted ${seasons.length} missing seasons`
     )
   }
 }
