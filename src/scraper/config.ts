@@ -92,16 +92,6 @@ export const dbTableInfo: Record<
       'highlights',
       'referee_id',
       'man_of_the_match'
-    ],
-    dependenciesTables: {
-      referee: {
-        table: 'referee',
-        columns: ['referee_id', 'referee_name']
-      },
-      competitions: {
-        table: 'competitions',
-        columns: ['league_id', 'league_name']
-      }
-    }
+    ]
   }
 }
