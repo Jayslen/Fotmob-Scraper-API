@@ -1,134 +1,20 @@
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
-import { InsertionArgs, InsertionEntity } from '../../types/core.js'
+import { InsertionArgs } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../helpers/uuid.helper.js'
-import { scapeQuote } from '../helpers/scapeSqlQuote.js'
-import { dbTableInfo } from '../../config.js'
 import { Preinsert } from '../helpers/preinsert.js'
 
 export async function insertMatches(input: InsertionArgs) {
   const matchesData = await loadMatchesData()
-  const { table, columns, dependenciesTables } = input
+  const { table, columns } = input
 
   await Preinsert.teams(matchesData)
-  {
-    const stadiumsDb = await PreloadDB.stadiums()
-    const playersDb = await PreloadDB.players()
-    const competitionsDb = await PreloadDB.competitions()
-
-    const { Stadium, Players, Teams } = InsertionEntity
-
-    const stadiumsToAdd = Array.from(
-      new Map(
-        matchesData.flatMap((matches) =>
-          matches.matches.flatMap((mt) => {
-            const stadium = mt.details.stadium
-
-            if (stadiumsDb.has(stadium.name)) return []
-
-            return [[stadium.name, { stadium }]]
-          })
-        )
-      ).values()
-    ).map((std) => std.stadium)
-    const playersToAdd = matchesData
-      .flatMap((matches) =>
-        matches.matches.flatMap((mt) => {
-          return mt.goals.flatMap((pl) => {
-            return pl.flatMap((goal) => goal.name)
-          })
-        })
-      )
-      .concat(
-        matchesData.flatMap((matches) =>
-          matches.matches.map((mt) => {
-            return mt.matchFacts.manOfTheMatch
-          })
-        )
-      )
-      .filter((player) => !playersDb.has(player))
-    const competitionsToAdd = matchesData
-      .map((mt) => mt.league)
-      .filter((competition) => !competitionsDb.has(competition))
-
-    if (stadiumsToAdd.length > 0) {
-      const stadiumTable = dbTableInfo[Stadium]
-      const values = stadiumsToAdd.map(({ name, capacity, surface }) => {
-        return [
-          newUUID(),
-          scapeQuote(name),
-          'NULL',
-          capacity ?? 'NULL',
-          'NULL',
-          surface ?? 'NULL'
-        ]
-      })
-      await insertValues(
-        stadiumTable.table,
-        stadiumTable.columns,
-        values,
-        'stadiums'
-      )
-    }
-    if (playersToAdd.length > 0) {
-      const playerTable = dbTableInfo[Players]
-      const values = playersToAdd.map((player) => {
-        return [
-          newUUID(),
-          scapeQuote(player),
-          'NULL',
-          'NULL',
-          'NULL',
-          'NULL',
-          'NULL'
-        ]
-      })
-      await insertValues(
-        playerTable.table,
-        playerTable.columns,
-        values,
-        'players'
-      )
-    }
-
-    if (dependenciesTables) {
-      const { table: refereeTable, columns: refereeColumns } =
-        dependenciesTables.referee
-      const refereesValues = matchesData
-        .flatMap((matches) => matches.matches.map((mt) => mt.details.referee))
-        .map((referee) => [newUUID(), scapeQuote(referee)])
-      await insertValues(
-        refereeTable,
-        refereeColumns,
-        refereesValues,
-        'referees'
-      )
-      const seasons = [...new Set(matchesData.map((mt) => mt.season))]
-      await insertValues(
-        'seasons',
-        ['season_id', 'season'],
-        seasons.map((season) => [newUUID(), season]),
-        'seasons'
-      )
-
-      if (competitionsToAdd.length > 0) {
-        const { table: competitionTable, columns: competitionColumns } =
-          dependenciesTables.competitions
-        const competitionsValues = competitionsToAdd.map((c) => [
-          newUUID(),
-          scapeQuote(c)
-        ])
-
-        await insertValues(
-          competitionTable,
-          competitionColumns,
-          competitionsValues,
-          'competitions'
-        )
-      }
-    }
-  }
+  await Preinsert.stadiums(matchesData)
+  await Preinsert.players(matchesData)
+  await Preinsert.competitions(matchesData)
+  await Preinsert.referees(matchesData)
+  await Preinsert.seasons(matchesData)
 
   const teamsDb = await PreloadDB.teams(true)
   const stadiumsDb = await PreloadDB.stadiums(true)
