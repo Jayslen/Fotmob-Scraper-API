@@ -47,11 +47,12 @@ export enum Surface {
 
 export interface Goal {
   name: string
-  ownGoal: null
+  ownGoal: boolean | null
   minute: number
   addedTime: number | null
-  penalty: null
+  penalty: boolean
   assistBy?: string
+  scoredFor: 0 | 1
 }
 
 export interface MatchCard {
