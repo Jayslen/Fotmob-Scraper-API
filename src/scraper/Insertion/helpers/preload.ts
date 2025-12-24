@@ -1,4 +1,5 @@
 import DB from '../../dbInstance.js'
+import { getMatchKey } from '../utils/getMatchKey.js'
 
 const countriesMap = new Map<string, string>()
 const stadiumsMap = new Map<string, string>()
@@ -8,6 +9,7 @@ const playersMap = new Map<string, string>()
 const refereesMap = new Map<string, string>()
 const competitionsMap = new Map<string, string>()
 const seasonsMap = new Map<string, string>()
+const matchesMap = new Map<string, string>()
 
 export class PreloadDB {
   static async countries(): Promise<Map<string, string>> {
@@ -111,5 +113,47 @@ export class PreloadDB {
     )) as [{ season_id: string; season: string }[], []]
     rows.forEach((row) => seasonsMap.set(row.season, row.season_id))
     return seasonsMap
+  }
+
+  static async matches(refresh?: boolean) {
+    if (matchesMap.size > 0 && !refresh) {
+      return matchesMap
+    }
+    const db = await DB.getInstance()
+    const [rows] = (await db.query(
+      `SELECT
+  BIN_TO_UUID(m.match_id,1) AS match_id,
+  ht.name AS home_team,
+  vt.name AS visit_team,
+  c.league_name AS competition,
+  s.season AS season,
+  m.match_week
+FROM matches m
+LEFT JOIN teams ht ON m.home_team_id = ht.team_id
+LEFT JOIN teams vt ON m.visit_team_id = vt.team_id
+LEFT JOIN competitions c ON m.competition = c.league_id
+LEFT JOIN seasons s ON m.season = s.season_id`
+    )) as [
+      {
+        match_id: string
+        home_team: string
+        visit_team: string
+        competition: string
+        season: string
+        match_week: number
+      }[],
+      any
+    ]
+    rows.forEach((row) => {
+      const key = getMatchKey(
+        row.home_team,
+        row.visit_team,
+        row.competition,
+        row.season,
+        row.match_week
+      )
+      matchesMap.set(key, row.match_id)
+    })
+    return matchesMap
   }
 }

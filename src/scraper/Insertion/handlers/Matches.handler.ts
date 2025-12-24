@@ -2,12 +2,13 @@ import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
 import { InsertionArgs } from '../../types/core.js'
-import { newUUID, uuidToSQLBinary } from '../helpers/uuid.helper.js'
+import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { Preinsert } from '../helpers/preinsert.js'
+import { getMatchKey } from '../utils/getMatchKey.js'
 
 export async function insertMatches(input: InsertionArgs) {
   const matchesData = await loadMatchesData()
-  const { table, columns } = input
+  const { table, columns, dependenciesTables } = input
 
   await Preinsert.teams(matchesData)
   await Preinsert.stadiums(matchesData)
@@ -53,4 +54,38 @@ export async function insertMatches(input: InsertionArgs) {
     })
   )
   await insertValues(table, columns, matchesValues, 'matches')
+
+  // dependencies entities
+
+  const matchesDb = await PreloadDB.matches()
+
+  if (dependenciesTables) {
+    const { table, columns } = dependenciesTables.matchGoals
+    const mathesGoals = matchesData.flatMap((matches) =>
+      matches.matches.flatMap((mt) =>
+        mt.goals.flatMap((g) =>
+          g.map((goal) => [
+            uuidToSQLBinary(
+              matchesDb.get(
+                getMatchKey(
+                  mt.teams[0],
+                  mt.teams[1],
+                  matches.league,
+                  matches.season,
+                  matches.round
+                )
+              )
+            ),
+            uuidToSQLBinary(playersDb.get(goal.name)),
+            uuidToSQLBinary(teamsDb.get(mt.teams[goal.scoredFor])),
+            goal.minute,
+            goal.addedTime ?? 'NULL',
+            goal.ownGoal ?? 'NULL',
+            goal.penalty ?? 'NULL'
+          ])
+        )
+      )
+    )
+    await insertValues(table, columns, mathesGoals, 'matchGoals')
+  }
 }

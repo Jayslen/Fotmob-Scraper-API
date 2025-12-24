@@ -2,8 +2,8 @@ import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadTeamsData } from '../../parsers/parseScrapedData.js'
 import { InsertionArgs } from '../../types/core.js'
-import { newUUID, uuidToSQLBinary } from '../helpers/uuid.helper.js'
-import { scapeQuote } from '../helpers/scapeSqlQuote.js'
+import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
+import { scapeQuote } from '../utils/scapeSqlQuote.js'
 
 export async function insertTeams(input: InsertionArgs) {
   const { table, columns, insertion } = input

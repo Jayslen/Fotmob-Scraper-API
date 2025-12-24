@@ -92,6 +92,20 @@ export const dbTableInfo: Record<
       'highlights',
       'referee_id',
       'man_of_the_match'
-    ]
+    ],
+    dependenciesTables: {
+      matchGoals: {
+        table: 'match_goals',
+        columns: [
+          'match_id',
+          'player_id',
+          'team_id',
+          'main_minute',
+          'added_minute',
+          'is_own_goal',
+          'is_penalty'
+        ]
+      }
+    }
   }
 }
