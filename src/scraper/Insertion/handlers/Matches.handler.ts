@@ -67,6 +67,7 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
       matches.matches.flatMap((mt) =>
         mt.goals.flatMap((g) =>
           g.map((goal) => [
+            newUUID(),
             uuidToSQLBinary(
               matchesDb.get(
                 getMatchKey(

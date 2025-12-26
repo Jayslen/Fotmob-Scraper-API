@@ -69,6 +69,7 @@ export const dbTableInfo: DBTableInfoMap = {
   matchGoals: {
     table: 'match_goals',
     columns: [
+      'goal_id',
       'match_id',
       'player_id',
       'team_id',
