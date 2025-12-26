@@ -1,6 +1,5 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { InsertionEntity } from '../types/core.js'
 import { Team, Teams } from '../types/Teams.js'
 import { MatchParsed } from 'src/scraper/types/Match.js'
 
@@ -9,8 +8,6 @@ interface TeamData extends Team {
 }
 const teamsData: TeamData[] = []
 const matchesData: MatchParsed[] = []
-
-const { Teams } = InsertionEntity
 
 export async function loadTeamsData() {
   if (teamsData.length > 0) return teamsData

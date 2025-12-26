@@ -2,10 +2,11 @@ import { insertValues } from '../helpers/dbQuery.js'
 import { loadTeamsData } from '../../parsers/parseScrapedData.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
 import { newUUID } from '../utils/uuid.helper.js'
-import { InsertionArgs } from '../../types/core.js'
+import { Entities, InsertionArgs } from '../../types/core.js'
+import { dbTableInfo } from 'src/scraper/dbEntities.js'
 
-export async function insertStadiums(input: InsertionArgs) {
-  const { table, columns, insertion } = input
+export async function insertStadiums(entity: InsertionArgs<Entities.Stadium>) {
+  const { table, columns } = dbTableInfo[entity]
   const teamsData = await loadTeamsData()
   const stadiums = teamsData
     .map((team) => team.stadium)
@@ -17,5 +18,5 @@ export async function insertStadiums(input: InsertionArgs) {
       stadium.opened || 'NULL',
       stadium.surface ? scapeQuote(stadium.surface) : 'NULL'
     ])
-  return await insertValues(table, columns, stadiums, insertion)
+  return await insertValues(table, columns, stadiums, entity)
 }

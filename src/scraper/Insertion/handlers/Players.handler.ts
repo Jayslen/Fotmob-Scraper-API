@@ -3,10 +3,11 @@ import { PreloadDB } from '../helpers/preload.js'
 import { loadTeamsData } from '../../parsers/parseScrapedData.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
-import { InsertionArgs } from '../../types/core.js'
+import { Entities, InsertionArgs } from '../../types/core.js'
+import { dbTableInfo } from 'src/scraper/dbEntities.js'
 
-export async function insertPlayers(input: InsertionArgs) {
-  const { table, columns, insertion, dependenciesTables } = input
+export async function insertPlayers(entity: InsertionArgs<Entities.Players>) {
+  const { table, columns, dependenciesTables } = dbTableInfo[entity]
   const teamsDB = await PreloadDB.teams(true)
   const countriesDb = await PreloadDB.countries()
 
@@ -27,10 +28,14 @@ export async function insertPlayers(input: InsertionArgs) {
       countryUUID ? uuidToSQLBinary(countryUUID) : 'NULL'
     ]
   })
-  await insertValues(table, columns, playersValues, insertion)
+  await insertValues(table, columns, playersValues, entity)
 
   if (dependenciesTables) {
-    const { positions, playerPositions } = dependenciesTables
+    const [positionsKey, playerPositionsKey] = dependenciesTables
+
+    const positions = dbTableInfo[positionsKey]
+    const playerPositions = dbTableInfo[playerPositionsKey]
+
     const positionsValues = [...new Set(players.flatMap((pl) => pl.positions))]
       .filter((pos) => pos !== undefined)
       .map((pos) => [newUUID(), pos])

@@ -1,11 +1,12 @@
-import { MatchParsed } from '../../types/Match.js'
+import { LEAGUES_AVAILABLE } from '../../config.js'
+import { dbTableInfo } from '../../dbEntities.js'
 import { PreloadDB } from './preload.js'
-import { dbTableInfo, LEAGUES_AVAILABLE } from 'src/scraper/config.js'
-import { InsertionEntity } from '../../types/core.js'
-import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
-import { scapeQuote } from '../utils/scapeSqlQuote.js'
 import { insertValues } from './dbQuery.js'
 import { PreinsertParser } from '../../parsers/preinsertParser.js'
+import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
+import { scapeQuote } from '../utils/scapeSqlQuote.js'
+import { MatchParsed } from '../../types/Match.js'
+import { Entities } from '../../types/core.js'
 
 // class to held the method for pre-insert values that are required for the insertion of some entities
 export class Preinsert {
@@ -13,8 +14,7 @@ export class Preinsert {
     const teams = await PreinsertParser.parseTeams(matchesData)
     if (!teams.length) return
 
-    const { Teams } = InsertionEntity
-    const teamsTable = dbTableInfo[Teams]
+    const teamsTable = dbTableInfo[Entities.Teams]
     const countriesDb = await PreloadDB.countries()
 
     const values = teams.map(({ team, competition }) => {
@@ -41,8 +41,7 @@ export class Preinsert {
     const stadiums = await PreinsertParser.parseStadiums(matchesData)
     if (!stadiums.length) return
 
-    const { Stadium } = InsertionEntity
-    const { table, columns } = dbTableInfo[Stadium]
+    const { table, columns } = dbTableInfo[Entities.Stadium]
     const values = stadiums.map(({ name, capacity, surface }) => {
       return [
         newUUID(),
@@ -66,8 +65,7 @@ export class Preinsert {
     const players = await PreinsertParser.parsePlayers(matchesData)
     if (!players.length) return
 
-    const { Players } = InsertionEntity
-    const { table, columns } = dbTableInfo[Players]
+    const { table, columns } = dbTableInfo[Entities.Players]
     const values = players.map((player) => {
       return [
         newUUID(),

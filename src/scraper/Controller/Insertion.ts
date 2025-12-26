@@ -1,15 +1,11 @@
 import DB from '../dbInstance.js'
-import { dbTableInfo } from '../config.js'
 import { handleInsertion } from '../Insertion/insertion.dispacher.js'
-import { InsertionEntity } from '../types/core.js'
+import { Entities } from '../types/core.js'
 
-export async function InsertionDB(entities: InsertionEntity[]) {
+export async function InsertionDB(entities: Entities[]) {
   const db = await DB.getInstance()
   for (const entity of entities) {
-    await handleInsertion({
-      insertion: entity,
-      ...dbTableInfo[entity]
-    })
+    await handleInsertion(entity)
   }
   await db.end()
 }

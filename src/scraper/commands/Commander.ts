@@ -2,7 +2,7 @@ import { ScrapeMatchesController } from '../Controller/ScrapeMatches.js'
 import { ScrapeTeamsController } from '../Controller/ScrapeTeams.js'
 import { InsertionDB } from '../Controller/Insertion.js'
 import {
-  InsertionEntity,
+  Entities,
   ScrapeMatchesInput,
   ScrapeTeamsInput
 } from '../types/core.js'
@@ -16,7 +16,7 @@ export class Commands {
     await ScrapeTeamsController(league)
   }
 
-  static async Insertion(entities: InsertionEntity[]) {
+  static async Insertion(entities: Entities[]) {
     await InsertionDB(entities)
   }
 }

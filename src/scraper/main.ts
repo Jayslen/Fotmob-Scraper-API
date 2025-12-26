@@ -3,7 +3,8 @@ import { program } from 'commander'
 import { Commands } from './commands/Commander.js'
 import { parseAnswers } from './parsers/parseAnswers.js'
 import { LEAGUES_AVAILABLE } from './config.js'
-import { Actions, InsertionEntity } from './types/core.js'
+import { Actions } from './types/core.js'
+import { InsertionTables } from './config.js'
 
 program
   .name('Scrape Football Results')
@@ -82,7 +83,7 @@ program.action(async () => {
         type: 'checkbox',
         name: 'entities',
         message: 'Which entity do you want to insert?',
-        choices: Object.values(InsertionEntity)
+        choices: InsertionTables
       }
     ])
     await Commands.Insertion(entities)

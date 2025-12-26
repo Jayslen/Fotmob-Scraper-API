@@ -1,12 +1,13 @@
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadTeamsData } from '../../parsers/parseScrapedData.js'
-import { InsertionArgs } from '../../types/core.js'
+import { Entities, InsertionArgs } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
+import { dbTableInfo } from 'src/scraper/dbEntities.js'
 
-export async function insertTeams(input: InsertionArgs) {
-  const { table, columns, insertion } = input
+export async function insertTeams(entity: InsertionArgs<Entities.Teams>) {
+  const { table, columns } = dbTableInfo[entity]
   const countriesDB = await PreloadDB.countries()
   const stadiumsDB = await PreloadDB.stadiums()
 
@@ -21,5 +22,5 @@ export async function insertTeams(input: InsertionArgs) {
       stadiumUUID ? uuidToSQLBinary(stadiumUUID) : 'NULL'
     ]
   })
-  return await insertValues(table, columns, teams, insertion)
+  return await insertValues(table, columns, teams, entity)
 }

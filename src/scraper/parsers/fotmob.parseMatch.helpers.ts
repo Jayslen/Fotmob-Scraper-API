@@ -20,7 +20,7 @@ import {
 // do this function with flatMap instead flat().map()
 export function parseGoalscorer(teamGoals: [HomeTeamGoals, AwayTeamGoals]) {
   return teamGoals.map((teamGoalData) => {
-    const index = teamGoals.indexOf(teamGoalData)
+    const index = teamGoals.indexOf(teamGoalData) as 0 | 1
     if (!teamGoalData) return []
     return Object.values(teamGoalData)
       .flat()

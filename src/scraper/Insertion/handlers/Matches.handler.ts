@@ -1,15 +1,15 @@
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
-import { InsertionArgs } from '../../types/core.js'
+import { Entities, InsertionArgs } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { Preinsert } from '../helpers/preinsert.js'
 import { getMatchKey } from '../utils/getMatchKey.js'
+import { dbTableInfo } from 'src/scraper/dbEntities.js'
 
-export async function insertMatches(input: InsertionArgs) {
+export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
   const matchesData = await loadMatchesData()
-  const { table, columns, dependenciesTables } = input
-
+  const { table, columns, dependenciesTables } = dbTableInfo[entity]
   await Preinsert.teams(matchesData)
   await Preinsert.stadiums(matchesData)
   await Preinsert.players(matchesData)
@@ -60,7 +60,9 @@ export async function insertMatches(input: InsertionArgs) {
   const matchesDb = await PreloadDB.matches()
 
   if (dependenciesTables) {
-    const { table, columns } = dependenciesTables.matchGoals
+    const [goalsKey] = dependenciesTables
+    const { table, columns } = dbTableInfo[goalsKey]
+
     const mathesGoals = matchesData.flatMap((matches) =>
       matches.matches.flatMap((mt) =>
         mt.goals.flatMap((g) =>

@@ -14,14 +14,6 @@ export enum Actions {
   Teams = 'Teams'
 }
 
-export enum InsertionEntity {
-  Country = 'countries',
-  Stadium = 'stadiums',
-  Teams = 'teams',
-  Players = 'players',
-  Matches = 'matches'
-}
-
 export interface ScrapeMatchesInput {
   league: { acrom: string; id: number; name: string }
   from: number
@@ -38,9 +30,36 @@ export interface ScrapeTeamsInput {
 
 export type sqlUUID = `UUID_TO_BIN('${UUID}', 1)`
 
-export interface InsertionArgs {
-  insertion: InsertionEntity
+export type InsertionArgs<E extends Entities> = E
+
+export enum Entities {
+  Country = 'countries',
+  Stadium = 'stadiums',
+  Teams = 'teams',
+  Players = 'players',
+  Matches = 'matches',
+  Positions = 'positions',
+  PlayerPositions = 'playerPositions',
+  MatchGoals = 'matchGoals'
+}
+
+export type DBTableConfig<
+  T extends readonly Entities[] | undefined = undefined
+> = {
   table: string
   columns: string[]
-  dependenciesTables?: Record<string, { table: string; columns: string[] }>
+  dependenciesTables?: T
+}
+
+export type DBTableInfoMap = {
+  [Entities.Country]: DBTableConfig
+  [Entities.Stadium]: DBTableConfig
+  [Entities.Teams]: DBTableConfig
+  [Entities.Players]: DBTableConfig<
+    readonly [Entities.Positions, Entities.PlayerPositions]
+  >
+  [Entities.Positions]: DBTableConfig
+  [Entities.PlayerPositions]: DBTableConfig
+  [Entities.Matches]: DBTableConfig<[Entities.MatchGoals]>
+  [Entities.MatchGoals]: DBTableConfig
 }
