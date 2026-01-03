@@ -66,26 +66,31 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
     const mathesGoals = matchesData.flatMap((matches) =>
       matches.matches.flatMap((mt) =>
         mt.goals.flatMap((g) =>
-          g.map((goal) => [
-            newUUID(),
-            uuidToSQLBinary(
-              matchesDb.get(
-                getMatchKey(
-                  mt.teams[0],
-                  mt.teams[1],
-                  matches.league,
-                  matches.season,
-                  matches.round
+          g.map((goal) => {
+            const teamScoredAgainst =
+              goal.scoredFor === 0 ? mt.teams[1] : mt.teams[0]
+            return [
+              newUUID(),
+              uuidToSQLBinary(
+                matchesDb.get(
+                  getMatchKey(
+                    mt.teams[0],
+                    mt.teams[1],
+                    matches.league,
+                    matches.season,
+                    matches.round
+                  )
                 )
-              )
-            ),
-            uuidToSQLBinary(playersDb.get(goal.name)),
-            uuidToSQLBinary(teamsDb.get(mt.teams[goal.scoredFor])),
-            goal.minute,
-            goal.addedTime ?? 'NULL',
-            goal.ownGoal ?? 'NULL',
-            goal.penalty ?? 'NULL'
-          ])
+              ),
+              uuidToSQLBinary(playersDb.get(goal.name)),
+              uuidToSQLBinary(teamsDb.get(mt.teams[goal.scoredFor])),
+              uuidToSQLBinary(teamsDb.get(teamScoredAgainst)),
+              goal.minute,
+              goal.addedTime ?? 'NULL',
+              goal.ownGoal ?? 'NULL',
+              goal.penalty ?? 'NULL'
+            ]
+          })
         )
       )
     )

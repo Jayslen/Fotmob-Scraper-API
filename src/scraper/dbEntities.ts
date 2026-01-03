@@ -64,7 +64,7 @@ export const dbTableInfo: DBTableInfoMap = {
       'referee_id',
       'man_of_the_match'
     ],
-    dependenciesTables: [Entities.MatchGoals]
+    dependenciesTables: [Entities.MatchGoals, Entities.MatchAssits]
   },
   matchGoals: {
     table: 'match_goals',
@@ -72,11 +72,16 @@ export const dbTableInfo: DBTableInfoMap = {
       'goal_id',
       'match_id',
       'player_id',
-      'team_id',
+      'scored_for',
+      'scored_to',
       'main_minute',
       'added_minute',
       'is_own_goal',
       'is_penalty'
     ]
+  },
+  matchAssists: {
+    table: 'match_assists',
+    columns: ['assists_id', 'player_id', 'goal_assisted', 'match_id']
   }
 }
