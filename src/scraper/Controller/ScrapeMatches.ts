@@ -27,7 +27,7 @@ export async function ScrapeMatchesController({
       { waitUntil: 'load' }
     )
 
-    const matchLinks = await page.$$eval('.e1mcimok0', (links) => {
+    const matchLinks = await page.$$eval('.e1ipnvj60', (links) => {
       return links.map((link) => link.getAttribute('href'))
     })
 
