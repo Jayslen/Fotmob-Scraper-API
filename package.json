@@ -6,8 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build/scraper": "tsc -p tsconfig.scraper.json",
-    "scrapper": "npx tsx ./src/scraper/main.ts",
-    "test/file": "npx tsx ./debug/test.ts",
+    "scrapper": "bun ./src/scraper/main.ts",
+    "test/file": "bun ./debug/test.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -31,12 +31,14 @@
     "prettier": "3.6.2",
     "tsx": "4.20.6",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.46.3"
+    "typescript-eslint": "8.46.3",
+    "@types/bun": "latest"
   },
   "dependencies": {
     "commander": "14.0.2",
     "inquirer": "12.11.0",
     "mysql2": "3.15.3",
     "playwright": "1.56.1"
-  }
+  },
+  "private": true
 }

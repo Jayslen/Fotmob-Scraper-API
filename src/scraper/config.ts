@@ -1,5 +1,4 @@
 import { Entities, LeaguesAvailable } from './types/core.js'
-process.loadEnvFile()
 
 export const databaseConfig = {
   host: process.env.HOST,
