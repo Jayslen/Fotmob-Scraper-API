@@ -6,6 +6,7 @@ import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { Preinsert } from '../helpers/preinsert.js'
 import { getMatchKey } from '../utils/getMatchKey.js'
 import { dbTableInfo } from 'src/scraper/dbEntities.js'
+import { getGoalKey } from '../utils/getGoalKey.js'
 
 export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
   const matchesData = await loadMatchesData()
@@ -57,11 +58,13 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
 
   // dependencies entities
 
-  const matchesDb = await PreloadDB.matches()
+  const matchesDb = await PreloadDB.matches(true)
 
   if (dependenciesTables) {
-    const [goalsKey] = dependenciesTables
-    const { table, columns } = dbTableInfo[goalsKey]
+    const [goalsKey, assistsKey] = dependenciesTables
+    const { table: goalsTable, columns: goalsColumns } = dbTableInfo[goalsKey]
+    const { table: assistsTable, columns: assistsColumns } =
+      dbTableInfo[assistsKey]
 
     const mathesGoals = matchesData.flatMap((matches) =>
       matches.matches.flatMap((mt) =>
@@ -94,6 +97,46 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
         )
       )
     )
-    await insertValues(table, columns, mathesGoals, 'matchGoals')
+    await insertValues(goalsTable, goalsColumns, mathesGoals, 'matchGoals')
+
+    const goalsDB = await PreloadDB.goals()
+    const assist = matchesData
+      .flatMap((matches) =>
+        matches.matches.flatMap((mt) =>
+          mt.goals.flatMap((g) =>
+            g.map((goal) => {
+              if (!goal.assistBy) return undefined
+              const matchKey = getMatchKey(
+                mt.teams[0],
+                mt.teams[1],
+                matches.league,
+                matches.season,
+                matches.round
+              )
+              const matchUUID = matchesDb.get(matchKey)
+              const teamScoreForUUID = teamsDb.get(mt.teams[goal.scoredFor])
+              const assisterUUID = playersDb.get(goal.assistBy)
+              const goalScorerUUID = playersDb.get(goal.name)
+
+              const goalKey = getGoalKey({
+                match_id: matchUUID as string,
+                player_id: goalScorerUUID as string,
+                scored_for: teamScoreForUUID as string,
+                main_minute: goal.minute
+              })
+              const goalUUID = goalsDB.get(goalKey)
+              return [
+                newUUID(),
+                uuidToSQLBinary(assisterUUID),
+                uuidToSQLBinary(goalUUID),
+                uuidToSQLBinary(matchUUID)
+              ]
+            })
+          )
+        )
+      )
+      .filter((assist) => assist !== undefined)
+
+    await insertValues(assistsTable, assistsColumns, assist, 'matchAssists')
   }
 }

@@ -40,7 +40,8 @@ export enum Entities {
   Matches = 'matches',
   Positions = 'positions',
   PlayerPositions = 'playerPositions',
-  MatchGoals = 'matchGoals'
+  MatchGoals = 'matchGoals',
+  MatchAssits = 'matchAssists'
 }
 
 export type DBTableConfig<
@@ -60,6 +61,7 @@ export type DBTableInfoMap = {
   >
   [Entities.Positions]: DBTableConfig
   [Entities.PlayerPositions]: DBTableConfig
-  [Entities.Matches]: DBTableConfig<[Entities.MatchGoals]>
+  [Entities.Matches]: DBTableConfig<[Entities.MatchGoals, Entities.MatchAssits]>
   [Entities.MatchGoals]: DBTableConfig
+  [Entities.MatchAssits]: DBTableConfig
 }

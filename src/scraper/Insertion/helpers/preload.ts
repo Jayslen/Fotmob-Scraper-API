@@ -1,4 +1,5 @@
 import DB from '../../dbInstance.js'
+import { getGoalKey } from '../utils/getGoalKey.js'
 import { getMatchKey } from '../utils/getMatchKey.js'
 
 const countriesMap = new Map<string, string>()
@@ -10,6 +11,7 @@ const refereesMap = new Map<string, string>()
 const competitionsMap = new Map<string, string>()
 const seasonsMap = new Map<string, string>()
 const matchesMap = new Map<string, string>()
+const goalsMap = new Map<string, string>()
 
 export class PreloadDB {
   static async countries(): Promise<Map<string, string>> {
@@ -155,5 +157,32 @@ LEFT JOIN seasons s ON m.season = s.season_id`
       matchesMap.set(key, row.match_id)
     })
     return matchesMap
+  }
+  static async goals() {
+    const db = await DB.getInstance()
+    const [rows] = (await db.query(`
+      SELECT BIN_TO_UUID(goal_id,1) AS goal_id,
+        BIN_TO_UUID(match_id,1) AS match_id,
+        BIN_TO_UUID(player_id,1) AS player_id,
+        BIN_TO_UUID(scored_for,1) AS scored_for,
+        main_minute
+        FROM match_goals;
+      `)) as [
+      {
+        goal_id: string
+        match_id: string
+        player_id: string
+        scored_for: string
+        main_minute: number
+      }[],
+      any
+    ]
+
+    rows.forEach((row) => {
+      const goalKey = getGoalKey(row)
+      goalsMap.set(goalKey, row.goal_id)
+    })
+
+    return goalsMap
   }
 }
