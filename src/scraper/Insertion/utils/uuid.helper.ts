@@ -1,8 +1,5 @@
-import { randomUUID, UUID } from 'node:crypto'
-import { sqlUUID } from '../../types/core.js'
-
-export function newUUID(): sqlUUID {
-  return `UUID_TO_BIN('${randomUUID()}', 1)`
+export function newUUID() {
+  return `UUID_TO_BIN('${Bun.randomUUIDv7()}', 1)`
 }
 
 export function uuidToSQLBinary(uuid: string | undefined) {

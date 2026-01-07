@@ -1,6 +1,7 @@
-import path from 'node:path'
+import path from 'path'
 import fs from 'node:fs/promises'
 
+// update function to use it globally not just to write scrape data
 export async function writeData(filePaths: {
   data: any
   dir: string
@@ -13,7 +14,7 @@ export async function writeData(filePaths: {
 
   await fs.mkdir(route, { recursive: true })
 
-  await fs.writeFile(route + fileName, JSON.stringify(data))
+  Bun.write(route + fileName, JSON.stringify(data))
 
   const savedFilePath = path.join(route, fileName)
   console.log('Date saved in:', savedFilePath)

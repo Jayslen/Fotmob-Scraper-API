@@ -24,7 +24,7 @@ export async function insertValues(
     const errorsPath = path.join(process.cwd(), '/debug/logs-errors')
     await fs.mkdir(errorsPath, { recursive: true })
     console.error(errorMsg)
-    await fs.writeFile(
+    await Bun.write(
       path.join(errorsPath, `error-${entity}.txt`),
       `${errorMsg}\n${query}`
     )

@@ -1,5 +1,3 @@
-import { UUID } from 'node:crypto'
-
 export type League = 'premier-league' | 'laliga' | 'serie' | 'bundesliga'
 
 export type LeaguesAvailable = {
@@ -27,8 +25,6 @@ export interface ScrapeTeamsInput {
   name: string
   country: string
 }
-
-export type sqlUUID = `UUID_TO_BIN('${UUID}', 1)`
 
 export type InsertionArgs<E extends Entities> = E
 
