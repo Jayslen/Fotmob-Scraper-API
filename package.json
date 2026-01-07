@@ -8,6 +8,7 @@
     "build/scraper": "tsc -p tsconfig.scraper.json",
     "scrapper": "bun ./src/scraper/main.ts",
     "test/file": "bun ./debug/test.ts",
+    "create-db": "bun ./create_db.script.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
