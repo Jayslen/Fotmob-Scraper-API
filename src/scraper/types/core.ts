@@ -61,3 +61,16 @@ export type DBTableInfoMap = {
   [Entities.MatchGoals]: DBTableConfig
   [Entities.MatchAssits]: DBTableConfig
 }
+
+export enum ENTITIES_VIEWS {
+  COUNTRIES = 'countries',
+  STADIUMS = 'stadiums',
+  TEAMS = 'teams',
+  POSITIONS = 'positions',
+  PLAYERS = 'players',
+  REFEREES = 'referees',
+  COMPETITIONS = 'competitions',
+  SEASONS = 'seasons',
+  MATCHES = 'matches',
+  GOALS = 'goals'
+}
