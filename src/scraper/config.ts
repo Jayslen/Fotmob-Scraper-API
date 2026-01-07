@@ -1,13 +1,5 @@
 import { Entities, LeaguesAvailable } from './types/core.js'
 
-export const databaseConfig = {
-  host: process.env.HOST,
-  user: process.env.DBUSER,
-  database: process.env.DATABASE,
-  password: process.env.PASSWORD,
-  port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3306
-}
-
 export const LEAGUES_AVAILABLE: LeaguesAvailable = [
   {
     acrom: 'premier-league',
