@@ -1,4 +1,4 @@
-import DB from '../../dbInstance.js'
+import db from '../../dbInstance.js'
 import { getGoalKey } from '../utils/getGoalKey.js'
 import { getMatchKey } from '../utils/getMatchKey.js'
 
@@ -18,10 +18,11 @@ export class PreloadDB {
     if (countriesMap.size > 0) {
       return countriesMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      'SELECT BIN_TO_UUID(country_id, 1) AS country_id, country FROM countries'
-    )) as [{ country_id: string; country: string }[], any]
+    const rows =
+      (await db`SELECT BIN_TO_UUID(country_id, 1) AS country_id, country FROM countries`) as {
+        country_id: string
+        country: string
+      }[]
 
     rows.forEach((row) => countriesMap.set(row.country, row.country_id))
 
@@ -32,10 +33,11 @@ export class PreloadDB {
     if (stadiumsMap.size > 0 && !refresh) {
       return stadiumsMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      'SELECT BIN_TO_UUID(stadium_id, 1) AS stadium_id, stadium FROM stadiums'
-    )) as [{ stadium_id: string; stadium: string }[], any]
+    const rows =
+      (await db`SELECT BIN_TO_UUID(stadium_id, 1) AS stadium_id, stadium FROM stadiums`) as {
+        stadium_id: string
+        stadium: string
+      }[]
 
     rows.forEach((stadium) => {
       stadiumsMap.set(stadium.stadium, stadium.stadium_id)
@@ -47,10 +49,11 @@ export class PreloadDB {
     if (teamsMap.size > 0 && !refresh) {
       return teamsMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      'SELECT BIN_TO_UUID(team_id,1) AS team_id, name FROM teams'
-    )) as [{ team_id: string; name: string }[], any]
+    const rows =
+      (await db`SELECT BIN_TO_UUID(team_id,1) AS team_id, name FROM teams`) as {
+        team_id: string
+        name: string
+      }[]
     rows.forEach((team) => {
       teamsMap.set(team.name, team.team_id)
     })
@@ -61,10 +64,11 @@ export class PreloadDB {
     if (positionsMap.size > 0) {
       return positionsMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      'SELECT BIN_TO_UUID(position_id, 1) AS position_id, position FROM positions'
-    )) as [{ position_id: string; position: string }[], any]
+    const rows =
+      (await db`SELECT BIN_TO_UUID(position_id, 1) AS position_id, position FROM positions`) as [
+        { position_id: string; position: string }[],
+        any
+      ]
     rows.forEach((row) => positionsMap.set(row.position, row.position_id))
     return positionsMap
   }
@@ -73,10 +77,11 @@ export class PreloadDB {
     if (playersMap.size > 0 && !refresh) {
       return playersMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      'SELECT BIN_TO_UUID(player_id, 1) AS player_id, player_name FROM players'
-    )) as [{ player_id: string; player_name: string }[], []]
+    const rows =
+      (await db`SELECT BIN_TO_UUID(player_id, 1) AS player_id, player_name FROM players`) as {
+        player_id: string
+        player_name: string
+      }[]
     rows.forEach((row) => playersMap.set(row.player_name, row.player_id))
     return playersMap
   }
@@ -85,10 +90,11 @@ export class PreloadDB {
     if (refereesMap.size > 0 && !refresh) {
       return refereesMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      'SELECT BIN_TO_UUID(referee_id, 1) AS referee_id, referee_name FROM referee'
-    )) as [{ referee_id: string; referee_name: string }[], []]
+    const rows =
+      (await db`SELECT BIN_TO_UUID(referee_id, 1) AS referee_id, referee_name FROM referee`) as {
+        referee_id: string
+        referee_name: string
+      }[]
     rows.forEach((row) => refereesMap.set(row.referee_name, row.referee_id))
     return refereesMap
   }
@@ -97,10 +103,11 @@ export class PreloadDB {
     if (competitionsMap.size > 0 && !refresh) {
       return competitionsMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      'SELECT BIN_TO_UUID(league_id, 1) AS league_id, league_name FROM competitions'
-    )) as [{ league_id: string; league_name: string }[], []]
+    const rows =
+      (await db`SELECT BIN_TO_UUID(league_id, 1) AS league_id, league_name FROM competitions`) as {
+        league_id: string
+        league_name: string
+      }[]
     rows.forEach((row) => competitionsMap.set(row.league_name, row.league_id))
     return competitionsMap
   }
@@ -109,10 +116,11 @@ export class PreloadDB {
     if (seasonsMap.size > 0 && !refresh) {
       return seasonsMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      'SELECT BIN_TO_UUID(season_id, 1) AS season_id, season FROM seasons'
-    )) as [{ season_id: string; season: string }[], []]
+    const rows =
+      (await db`SELECT BIN_TO_UUID(season_id, 1) AS season_id, season FROM seasons`) as {
+        season_id: string
+        season: string
+      }[]
     rows.forEach((row) => seasonsMap.set(row.season, row.season_id))
     return seasonsMap
   }
@@ -121,9 +129,7 @@ export class PreloadDB {
     if (matchesMap.size > 0 && !refresh) {
       return matchesMap
     }
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(
-      `SELECT
+    const rows = (await db`SELECT
   BIN_TO_UUID(m.match_id,1) AS match_id,
   ht.name AS home_team,
   vt.name AS visit_team,
@@ -134,18 +140,14 @@ FROM matches m
 LEFT JOIN teams ht ON m.home_team_id = ht.team_id
 LEFT JOIN teams vt ON m.visit_team_id = vt.team_id
 LEFT JOIN competitions c ON m.competition = c.league_id
-LEFT JOIN seasons s ON m.season = s.season_id`
-    )) as [
-      {
-        match_id: string
-        home_team: string
-        visit_team: string
-        competition: string
-        season: string
-        match_week: number
-      }[],
-      any
-    ]
+LEFT JOIN seasons s ON m.season = s.season_id`) as {
+      match_id: string
+      home_team: string
+      visit_team: string
+      competition: string
+      season: string
+      match_week: number
+    }[]
     rows.forEach((row) => {
       const key = getMatchKey(
         row.home_team,
@@ -159,24 +161,20 @@ LEFT JOIN seasons s ON m.season = s.season_id`
     return matchesMap
   }
   static async goals() {
-    const db = await DB.getInstance()
-    const [rows] = (await db.query(`
+    const rows = (await db`
       SELECT BIN_TO_UUID(goal_id,1) AS goal_id,
         BIN_TO_UUID(match_id,1) AS match_id,
         BIN_TO_UUID(player_id,1) AS player_id,
         BIN_TO_UUID(scored_for,1) AS scored_for,
         main_minute
         FROM match_goals;
-      `)) as [
-      {
-        goal_id: string
-        match_id: string
-        player_id: string
-        scored_for: string
-        main_minute: number
-      }[],
-      any
-    ]
+        `) as {
+      goal_id: string
+      match_id: string
+      player_id: string
+      scored_for: string
+      main_minute: number
+    }[]
 
     rows.forEach((row) => {
       const goalKey = getGoalKey(row)

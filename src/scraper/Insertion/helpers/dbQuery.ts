@@ -1,7 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { ResultSetHeader } from 'mysql2'
-import DB from '../../dbInstance.js'
+import db from '../../dbInstance.js'
 
 export async function insertValues(
   table: string,
@@ -11,9 +10,8 @@ export async function insertValues(
   msg?: string
 ) {
   const query = generateQuery(table, columns, values)
-  const db = await DB.getInstance()
   try {
-    const [results] = await db.query<ResultSetHeader>(query)
+    const results = await db.unsafe(query)
     if (results.affectedRows > 0) {
       console.log(msg ?? `Inserted ${results.affectedRows} rows into ${entity}`)
     } else {
@@ -37,7 +35,7 @@ function generateQuery(
   values: (string | number | boolean)[][]
 ) {
   return `
-              INSERT IGNORE INTO ${table} (${columns.join(', ')}) VALUES \n
+              INSERT IGNORE INTO ${table} (${columns.join(', ')}) VALUES
               ${values
                 .map(
                   (valueSet) =>
