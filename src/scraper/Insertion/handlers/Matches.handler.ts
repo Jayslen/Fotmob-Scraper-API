@@ -67,5 +67,9 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
       matchesData,
       ...dbTableInfo[assistsKey]
     })
+    await PostInsertUpdates.matchCards({
+      matchesData,
+      ...dbTableInfo[cardsKey]
+    })
   }
 }

@@ -101,4 +101,40 @@ export class PostInsertUpdates {
 
     await insertValues(table, columns, values, 'matchAssists')
   }
+
+  static async matchCards(input: {
+    matchesData: MatchParsed[]
+    table: string
+    columns: string[]
+  }) {
+    const { matchesData, table, columns } = input
+    const matchesDb = await PreloadDB.matches()
+    const playersDB = await PreloadDB.players()
+    const values = matchesData.flatMap((matches) =>
+      matches.matches.flatMap((mt) =>
+        mt.matchCards.map((mc) => {
+          const matchKey = getMatchKey(
+            mt.teams[0],
+            mt.teams[1],
+            matches.league,
+            matches.season,
+            matches.round
+          )
+          const matchUUID = matchesDb.get(matchKey)
+          const playerUUID = playersDB.get(mc.name)
+
+          return [
+            newUUID(),
+            uuidToSQLBinary(matchUUID),
+            uuidToSQLBinary(playerUUID),
+            mc.card,
+            mc.time,
+            mc.added || 'NULL'
+          ]
+        })
+      )
+    )
+
+    await insertValues(table, columns, values, 'matchCards')
+  }
 }

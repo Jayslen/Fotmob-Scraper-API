@@ -101,13 +101,13 @@ CREATE TABLE IF NOT EXISTS `match_lineup_players` (
 );
 
 CREATE TABLE IF NOT EXISTS `match_cards` (
-	`mc_id` BINARY(16) NOT NULL UNIQUE,
+	`mc_id` BINARY(16) NOT NULL,
 	`match_id` BINARY(16) NOT NULL,
 	`player_id` BINARY(16) NOT NULL,
 	`card` ENUM('Red', 'Yellow', 'YellowRed') NOT NULL,
 	`main_minute` INTEGER NOT NULL,
 	`added_minute` INTEGER,
-    UNIQUE(match_id, player_id,main_minute,added_minute),
+    UNIQUE(match_id, player_id,card, main_minute),
 	PRIMARY KEY(`mc_id`)
 );
 
