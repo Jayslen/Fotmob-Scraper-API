@@ -45,20 +45,24 @@ export class PreinsertParser {
     const playersDb = await PreloadDB.players()
     return matchesData
       .flatMap(({ matches }) =>
-        matches.flatMap(({ goals, matchFacts, matchCards }) => [
-          // Goal scorers
-          ...goals.flatMap((pl) => pl.flatMap((goal) => goal.name)),
+        matches.flatMap(
+          ({ goals, matchFacts, matchCards, playerMatchStats }) => [
+            ...playerMatchStats.flatMap((pl) => pl.player),
 
-          // Man of the match
-          matchFacts?.manOfTheMatch,
+            // Goal scorers
+            ...goals.flatMap((pl) => pl.flatMap((goal) => goal.name)),
 
-          // Assist providers
-          ...goals.flatMap((goal) =>
-            goal.flatMap((g) => g.assistBy).filter(Boolean)
-          ),
-          // cards
-          ...matchCards.flatMap((pl) => pl.name)
-        ])
+            // Man of the match
+            matchFacts?.manOfTheMatch,
+
+            // Assist providers
+            ...goals.flatMap((goal) =>
+              goal.flatMap((g) => g.assistBy).filter(Boolean)
+            ),
+            // cards
+            ...matchCards.flatMap((pl) => pl.name)
+          ]
+        )
       )
       .filter((g) => typeof g === 'string')
       .filter((player) => !playersDb.has(player))
