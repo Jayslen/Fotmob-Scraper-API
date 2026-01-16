@@ -1,6 +1,7 @@
 import { MatchParsed } from '../../types/Match.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { getMatchKey } from '../utils/getMatchKey.js'
+import { generateMissingKeys } from '../helpers/missingPlayerStats.js'
 import { PreloadDB } from './preload.js'
 import { insertValues } from './dbQuery.js'
 import { getGoalKey } from '../utils/getGoalKey.js'
@@ -136,5 +137,64 @@ export class PostInsertUpdates {
     )
 
     await insertValues(table, columns, values, 'matchCards')
+  }
+
+  static async PlayersMatchStats(input: {
+    matchesData: MatchParsed[]
+    table: string
+    columns: string[]
+  }) {
+    const { matchesData, table, columns } = input
+    const playersDb = await PreloadDB.players()
+    const matchesDb = await PreloadDB.matches()
+
+    const values = matchesData.flatMap((matches) =>
+      matches.matches.flatMap((mt) =>
+        mt.playerMatchStats.map((ps) => {
+          const playerUUID = playersDb.get(ps.player)
+          const matchKey = getMatchKey(
+            mt.teams[0],
+            mt.teams[1],
+            matches.league,
+            matches.season,
+            matches.round
+          )
+          const matchUUID = matchesDb.get(matchKey)
+          const id = newUUID()
+          const playerMatchStats = ps.stats.flatMap(
+            (stat): [string, number | 'NULL' | string][] => {
+              const key = stat.key
+                .replace(/[-\s]/g, '_')
+                .replaceAll('+', 'plus')
+                .replace(/[()]/g, '')
+                .toLowerCase()
+
+              if (!stat.total) {
+                return [[key, stat.value ?? 'NULL']]
+              }
+              //
+              return generateMissingKeys(key, stat.value ?? 0, stat.total)
+            }
+          )
+
+          const statsValues = columns
+            .map((col) => {
+              const playerHasStats = playerMatchStats.find(
+                ([key]) => key === col
+              )
+              return playerHasStats ? playerHasStats[1] : 'NULL'
+            })
+            .splice(3)
+
+          statsValues.unshift(
+            id,
+            uuidToSQLBinary(playerUUID),
+            uuidToSQLBinary(matchUUID)
+          )
+          return statsValues
+        })
+      )
+    )
+    await insertValues(table, columns, values, 'playerMatchStats')
   }
 }

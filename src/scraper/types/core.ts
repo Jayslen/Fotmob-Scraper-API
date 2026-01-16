@@ -38,7 +38,8 @@ export enum Entities {
   PlayerPositions = 'playerPositions',
   MatchGoals = 'matchGoals',
   MatchAssits = 'matchAssists',
-  MatchCards = 'matchCards'
+  MatchCards = 'matchCards',
+  PlayerMatchStats = 'playerMatchStats'
 }
 
 export type DBTableConfig<
@@ -59,11 +60,17 @@ export type DBTableInfoMap = {
   [Entities.Positions]: DBTableConfig
   [Entities.PlayerPositions]: DBTableConfig
   [Entities.Matches]: DBTableConfig<
-    [Entities.MatchGoals, Entities.MatchAssits, Entities.MatchCards]
+    readonly [
+      Entities.MatchGoals,
+      Entities.MatchAssits,
+      Entities.MatchCards,
+      Entities.PlayerMatchStats
+    ]
   >
   [Entities.MatchGoals]: DBTableConfig
   [Entities.MatchAssits]: DBTableConfig
   [Entities.MatchCards]: DBTableConfig
+  [Entities.PlayerMatchStats]: DBTableConfig
 }
 
 export enum ENTITIES_VIEWS {
