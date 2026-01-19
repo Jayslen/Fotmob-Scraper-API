@@ -35,7 +35,9 @@ export async function insertValues(
       )
     }
   }
-  console.log(msg ?? `Inserted ${rowsInserted} rows into ${entity}`)
+  if (rowsInserted > 0) {
+    console.log(msg ?? `Inserted ${rowsInserted} rows into ${entity}`)
+  }
 }
 
 function generateQuery(
