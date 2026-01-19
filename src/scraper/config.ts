@@ -17,5 +17,7 @@ export const InsertionTables = [
   Entities.Stadium,
   Entities.Teams,
   Entities.Players,
-  Entities.Matches
+  Entities.Matches,
+  Entities.PlayerMatchStats,
+  Entities.MatchLineUps
 ]

@@ -67,10 +67,7 @@ export const dbTableInfo: DBTableInfoMap = {
     dependenciesTables: [
       Entities.MatchGoals,
       Entities.MatchAssits,
-      Entities.MatchCards,
-      Entities.PlayerMatchStats,
-      Entities.MatchLineUps,
-      Entities.MatchLineUpsPlayers
+      Entities.MatchCards
     ]
   },
   matchGoals: {

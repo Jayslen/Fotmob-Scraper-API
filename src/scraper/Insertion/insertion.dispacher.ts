@@ -4,9 +4,19 @@ import { insertStadiums } from './handlers/Stadiums.handler.js'
 import { insertTeams } from './handlers/Teams.handler.js'
 import { insertPlayers } from './handlers/Players.handler.js'
 import { insertMatches } from './handlers/Matches.handler.js'
+import { insertPlayerMatchStats } from './handlers/PlayerMatchStats.handler.js'
+import { insertMatchLineups } from './handlers/MatchLineups.handler.js'
 
 export async function handleInsertion(input: InsertionArgs<Entities>) {
-  const { Country, Stadium, Teams, Players, Matches } = Entities
+  const {
+    Country,
+    Stadium,
+    Teams,
+    Players,
+    Matches,
+    PlayerMatchStats,
+    MatchLineUps
+  } = Entities
   switch (input) {
     case Country:
       return await insertCountries(input)
@@ -19,6 +29,12 @@ export async function handleInsertion(input: InsertionArgs<Entities>) {
     }
     case Matches: {
       return insertMatches(input)
+    }
+    case PlayerMatchStats: {
+      return insertPlayerMatchStats(input)
+    }
+    case MatchLineUps: {
+      return insertMatchLineups(input)
     }
   }
 }

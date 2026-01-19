@@ -64,14 +64,7 @@ export type DBTableInfoMap = {
   [Entities.Positions]: DBTableConfig
   [Entities.PlayerPositions]: DBTableConfig
   [Entities.Matches]: DBTableConfig<
-    readonly [
-      Entities.MatchGoals,
-      Entities.MatchAssits,
-      Entities.MatchCards,
-      Entities.PlayerMatchStats,
-      Entities.MatchLineUps,
-      Entities.MatchLineUpsPlayers
-    ]
+    readonly [Entities.MatchGoals, Entities.MatchAssits, Entities.MatchCards]
   >
   [Entities.MatchGoals]: DBTableConfig
   [Entities.MatchAssits]: DBTableConfig

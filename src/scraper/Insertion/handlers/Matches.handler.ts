@@ -57,8 +57,7 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
 
   // dependencies entities
   if (dependenciesTables) {
-    const [goalsKey, assistsKey, cardsKey, playerStatsKey, MatchLineupsKey] =
-      dependenciesTables
+    const [goalsKey, assistsKey, cardsKey] = dependenciesTables
 
     await PostInsertUpdates.matchesGoals({
       matchesData,
@@ -71,15 +70,6 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
     await PostInsertUpdates.matchCards({
       matchesData,
       ...dbTableInfo[cardsKey]
-    })
-    await PostInsertUpdates.PlayersMatchStats({
-      matchesData,
-      ...dbTableInfo[playerStatsKey]
-    })
-
-    await PostInsertUpdates.MatchLineups({
-      matchesData,
-      ...dbTableInfo[MatchLineupsKey]
     })
   }
 }
