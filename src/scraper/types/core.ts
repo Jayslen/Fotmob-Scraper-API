@@ -1,3 +1,5 @@
+import { MatchParsed } from './Match.js'
+
 export type League = 'premier-league' | 'laliga' | 'serie' | 'bundesliga'
 
 export type LeaguesAvailable = {
@@ -39,7 +41,9 @@ export enum Entities {
   MatchGoals = 'matchGoals',
   MatchAssits = 'matchAssists',
   MatchCards = 'matchCards',
-  PlayerMatchStats = 'playerMatchStats'
+  PlayerMatchStats = 'playerMatchStats',
+  MatchLineUps = 'matchLineUps',
+  MatchLineUpsPlayers = 'matchLineUpsPlayers'
 }
 
 export type DBTableConfig<
@@ -64,13 +68,26 @@ export type DBTableInfoMap = {
       Entities.MatchGoals,
       Entities.MatchAssits,
       Entities.MatchCards,
-      Entities.PlayerMatchStats
+      Entities.PlayerMatchStats,
+      Entities.MatchLineUps,
+      Entities.MatchLineUpsPlayers
     ]
   >
   [Entities.MatchGoals]: DBTableConfig
   [Entities.MatchAssits]: DBTableConfig
   [Entities.MatchCards]: DBTableConfig
   [Entities.PlayerMatchStats]: DBTableConfig
+  [Entities.MatchLineUps]: DBTableConfig<
+    readonly [Entities.MatchLineUpsPlayers]
+  >
+  [Entities.MatchLineUpsPlayers]: DBTableConfig
+}
+
+export type PostInsertMethodParams = {
+  table: string
+  columns: string[]
+  dependenciesTables?: readonly Entities[]
+  matchesData: MatchParsed[]
 }
 
 export enum ENTITIES_VIEWS {

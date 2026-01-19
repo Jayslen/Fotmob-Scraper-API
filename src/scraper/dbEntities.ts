@@ -68,7 +68,9 @@ export const dbTableInfo: DBTableInfoMap = {
       Entities.MatchGoals,
       Entities.MatchAssits,
       Entities.MatchCards,
-      Entities.PlayerMatchStats
+      Entities.PlayerMatchStats,
+      Entities.MatchLineUps,
+      Entities.MatchLineUpsPlayers
     ]
   },
   matchGoals: {
@@ -181,5 +183,14 @@ export const dbTableInfo: DBTableInfoMap = {
       'xg_non_penalty',
       'xgot_faced'
     ]
+  },
+  matchLineUps: {
+    table: 'match_lineups',
+    columns: ['lineup_id', 'match_id', 'team_id', 'lineup'],
+    dependenciesTables: [Entities.MatchLineUpsPlayers]
+  },
+  matchLineUpsPlayers: {
+    table: 'match_lineup_players',
+    columns: ['ln_player_id', 'player_id', 'lineup_id', 'status']
   }
 }

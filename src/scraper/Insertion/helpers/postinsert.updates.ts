@@ -1,17 +1,15 @@
 import { MatchParsed } from '../../types/Match.js'
+import { PostInsertMethodParams } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { getMatchKey } from '../utils/getMatchKey.js'
 import { generateMissingKeys } from '../helpers/missingPlayerStats.js'
 import { PreloadDB } from './preload.js'
 import { insertValues } from './dbQuery.js'
 import { getGoalKey } from '../utils/getGoalKey.js'
+import { dbTableInfo } from '../../dbEntities.js'
 
 export class PostInsertUpdates {
-  static async matchesGoals(input: {
-    matchesData: MatchParsed[]
-    table: string
-    columns: string[]
-  }) {
+  static async matchesGoals(input: PostInsertMethodParams) {
     const { matchesData, table, columns } = input
     const teamsDb = await PreloadDB.teams()
     const playersDb = await PreloadDB.players()
@@ -52,11 +50,7 @@ export class PostInsertUpdates {
     await insertValues(table, columns, values, 'matchGoals')
   }
 
-  static async matchesAssists(input: {
-    matchesData: MatchParsed[]
-    table: string
-    columns: string[]
-  }) {
+  static async matchesAssists(input: PostInsertMethodParams) {
     const { matchesData, table, columns } = input
     const goalsDB = await PreloadDB.goals()
     const matchesDb = await PreloadDB.matches()
@@ -139,11 +133,7 @@ export class PostInsertUpdates {
     await insertValues(table, columns, values, 'matchCards')
   }
 
-  static async PlayersMatchStats(input: {
-    matchesData: MatchParsed[]
-    table: string
-    columns: string[]
-  }) {
+  static async PlayersMatchStats(input: PostInsertMethodParams) {
     const { matchesData, table, columns } = input
     const playersDb = await PreloadDB.players()
     const matchesDb = await PreloadDB.matches()
@@ -196,5 +186,67 @@ export class PostInsertUpdates {
       )
     )
     await insertValues(table, columns, values, 'playerMatchStats')
+  }
+
+  static async MatchLineups(input: PostInsertMethodParams) {
+    const { matchesData, table, columns, dependenciesTables } = input
+
+    const teamsDB = await PreloadDB.teams()
+    const matchesDb = await PreloadDB.matches()
+    const playersDB = await PreloadDB.players()
+
+    const lineupsData = matchesData.flatMap((matches) =>
+      matches.matches.flatMap((mt) =>
+        mt.matchFacts.lineups.map((ln, i) => {
+          const players: { name: string; status: string }[] = [
+            ...ln.starters.map((player) => ({
+              name: player,
+              status: 'starter'
+            })),
+            ...ln.bench.map((player) => ({ name: player, status: 'bench' })),
+            ...ln.unavailable.map((player) => ({
+              name: player.name,
+              status: 'unavailable'
+            }))
+          ]
+          const matchKey = getMatchKey(
+            mt.teams[0],
+            mt.teams[1],
+            matches.league,
+            matches.season,
+            matches.round
+          )
+          const matchUUID = matchesDb.get(matchKey)
+          return {
+            id: Bun.randomUUIDv7(),
+            teamUUID: teamsDB.get(mt.teams[i]),
+            matchUUID,
+            formation: ln.formation,
+            players
+          }
+        })
+      )
+    )
+    const lineupsValues = lineupsData.map((ln) => [
+      uuidToSQLBinary(ln.id),
+      uuidToSQLBinary(ln.matchUUID),
+      uuidToSQLBinary(ln.teamUUID),
+      ln.formation
+    ])
+
+    const lineupPlayerValues = lineupsData.flatMap((ln) =>
+      ln.players.map((pl) => {
+        const playerUUID = uuidToSQLBinary(playersDB.get(pl.name))
+        return [newUUID(), playerUUID, uuidToSQLBinary(ln.id), pl.status]
+      })
+    )
+
+    await insertValues(table, columns, lineupsValues, 'matchLineups')
+
+    if (dependenciesTables) {
+      const matchLineupPlayersKey = dependenciesTables[0]
+      const { table, columns } = dbTableInfo[matchLineupPlayersKey]
+      await insertValues(table, columns, lineupPlayerValues, 'playersLineups')
+    }
   }
 }
