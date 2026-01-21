@@ -2,7 +2,7 @@ import { LEAGUES_AVAILABLE } from '../../config.js'
 import { dbTableInfo } from '../../dbEntities.js'
 import { PreloadDB } from './preload.js'
 import { insertValues } from './dbQuery.js'
-import { PreinsertParser } from '../../parsers/preinsertParser.js'
+import { MatchDataParser } from '../../parsers/matchDataParser.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
 import { MatchParsed } from '../../types/Match.js'
@@ -11,7 +11,7 @@ import { Entities } from '../../types/core.js'
 // class to held the method for pre-insert values that are required for the insertion of some entities
 export class Preinsert {
   static async teams(matchesData: MatchParsed[]) {
-    const teams = await PreinsertParser.parseTeams(matchesData)
+    const teams = await MatchDataParser.parseTeams(matchesData)
     if (!teams.length) return
 
     const teamsTable = dbTableInfo[Entities.Teams]
@@ -38,7 +38,7 @@ export class Preinsert {
     )
   }
   static async stadiums(matchesData: MatchParsed[]) {
-    const stadiums = await PreinsertParser.parseStadiums(matchesData)
+    const stadiums = await MatchDataParser.parseStadiums(matchesData)
     if (!stadiums.length) return
 
     const { table, columns } = dbTableInfo[Entities.Stadium]
@@ -62,7 +62,7 @@ export class Preinsert {
   }
 
   static async players(matchesData: MatchParsed[]) {
-    const players = await PreinsertParser.parsePlayers(matchesData)
+    const players = await MatchDataParser.parsePlayers(matchesData)
     if (!players.length) return
 
     const { table, columns } = dbTableInfo[Entities.Players]
@@ -89,7 +89,7 @@ export class Preinsert {
   // find a opmimal way to store all the schema into a object
   // without interfere with the 'dbTableInfo' object
   static async competitions(matchesData: MatchParsed[]) {
-    const competitions = await PreinsertParser.parseCompetitions(matchesData)
+    const competitions = await MatchDataParser.parseCompetitions(matchesData)
     const values = competitions.map((competition) => {
       return [newUUID(), scapeQuote(competition)]
     })
@@ -105,7 +105,7 @@ export class Preinsert {
   // find a opmimal way to store all the schema into a object
   // without interfere with the 'dbTableInfo' object
   static async referees(matchesData: MatchParsed[]) {
-    const referees = await PreinsertParser.parseReferees(matchesData)
+    const referees = await MatchDataParser.parseReferees(matchesData)
     const values = referees.map((referee) => {
       return [newUUID(), scapeQuote(referee)]
     })

@@ -1,10 +1,10 @@
 import { MatchParsed } from '../../types/Match.js'
 import { PostInsertMethodParams } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
-import { getMatchKey } from '../utils/getMatchKey.js'
+import { getMatchKey } from '../../utils/getMatchKey.js'
 import { PreloadDB } from './preload.js'
 import { insertValues } from './dbQuery.js'
-import { getGoalKey } from '../utils/getGoalKey.js'
+import { getGoalKey } from '../../utils/getGoalKey.js'
 
 export class PostInsertUpdates {
   static async matchesGoals(input: PostInsertMethodParams) {

@@ -43,7 +43,10 @@ export enum Entities {
   MatchCards = 'matchCards',
   PlayerMatchStats = 'playerMatchStats',
   MatchLineUps = 'matchLineUps',
-  MatchLineUpsPlayers = 'matchLineUpsPlayers'
+  MatchLineUpsPlayers = 'matchLineUpsPlayers',
+  FullMatchTeamsMatchStats = 'fullMatchTeamStats',
+  FirstHalfTeamStats = 'firstHalfTeamStats',
+  SecondHalfTeamStats = 'secondHalfTeamStats'
 }
 
 export type DBTableConfig<
@@ -74,6 +77,11 @@ export type DBTableInfoMap = {
     readonly [Entities.MatchLineUpsPlayers]
   >
   [Entities.MatchLineUpsPlayers]: DBTableConfig
+  [Entities.FullMatchTeamsMatchStats]: DBTableConfig<
+    readonly [Entities.FirstHalfTeamStats, Entities.SecondHalfTeamStats]
+  >
+  [Entities.FirstHalfTeamStats]: DBTableConfig
+  [Entities.SecondHalfTeamStats]: DBTableConfig
 }
 
 export type PostInsertMethodParams = {

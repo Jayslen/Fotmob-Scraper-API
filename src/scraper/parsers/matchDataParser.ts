@@ -1,7 +1,7 @@
 import { PreloadDB } from '../Insertion/helpers/preload.js'
 import { MatchParsed } from '../types/Match.js'
 
-export class PreinsertParser {
+export class MatchDataParser {
   static async parseTeams(
     matchesData: MatchParsed[]
   ): Promise<{ team: string; competition: string }[]> {
