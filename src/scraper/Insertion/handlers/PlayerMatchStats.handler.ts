@@ -1,11 +1,12 @@
-import { dbTableInfo } from 'src/scraper/dbEntities.js'
+import { dbTableInfo } from '../../dbEntities.js'
+import { loadMatchesData } from '../../parsers/parseScrapedData.js'
 import { Entities, InsertionArgs } from '../../types/core.js'
 import { insertValues } from '../helpers/dbQuery.js'
 import { generateMissingKeys } from '../helpers/missingPlayerStats.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
-import { loadMatchesData } from 'src/scraper/parsers/parseScrapedData.js'
+import { normalizeDbColumnName } from '../utils/dbColumnKey.js'
 
 export async function insertPlayerMatchStats(
   entity: InsertionArgs<Entities.PlayerMatchStats>
@@ -32,11 +33,7 @@ export async function insertPlayerMatchStats(
         const id = newUUID()
         const playerMatchStats = ps.stats.flatMap(
           (stat): [string, number | 'NULL' | string][] => {
-            const key = stat.key
-              .replace(/[-\s]/g, '_')
-              .replaceAll('+', 'plus')
-              .replace(/[()]/g, '')
-              .toLowerCase()
+            const key = normalizeDbColumnName(stat.key)
 
             if (!stat.total) {
               return [[key, stat.value ?? 'NULL']]
