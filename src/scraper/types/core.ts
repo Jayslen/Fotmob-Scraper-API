@@ -28,6 +28,13 @@ export interface ScrapeTeamsInput {
   country: string
 }
 
+export type TeamMatchStatEntry = {
+  name: string
+  value: (number | string | null)[]
+}
+
+export type StatsByPeriod = Record<string, TeamMatchStatEntry[]>
+
 export type InsertionArgs<E extends Entities> = E
 
 export enum Entities {
