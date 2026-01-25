@@ -5,8 +5,9 @@ import { insertValues } from '../helpers/dbQuery.js'
 import { generateMissingKeys } from '../helpers/missingPlayerStats.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
-import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
+import { newUUID } from '../utils/uuid.helper.js'
 import { normalizeDbColumnName } from '../utils/dbColumnKey.js'
+import { buildPlayerStatKey } from '../helpers/buildPlayerMatchstatKey.js'
 
 export async function insertPlayerMatchStats(
   entity: InsertionArgs<Entities.PlayerMatchStats>
@@ -42,18 +43,13 @@ export async function insertPlayerMatchStats(
           }
         )
 
-        const statsValues = columns
-          .map((col) => {
-            const playerHasStats = playerMatchStats.find(([key]) => key === col)
-            return playerHasStats ? playerHasStats[1] : 'NULL'
-          })
-          .splice(3)
-
-        statsValues.unshift(
+        const statsValues = buildPlayerStatKey({
+          columns,
+          playerMatchStats,
           id,
-          uuidToSQLBinary(playerUUID),
-          uuidToSQLBinary(matchUUID)
-        )
+          playerUUID,
+          matchUUID
+        })
         return statsValues
       })
     )
