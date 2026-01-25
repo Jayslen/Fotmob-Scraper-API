@@ -75,7 +75,7 @@ export class MatchDataParser {
       .filter((competition) => !competitionsDb.has(competition))
   }
 
-  static async parseReferees(matchesData: MatchParsed[]) {
+  static parseReferees(matchesData: MatchParsed[]) {
     return [
       ...new Set(
         matchesData.flatMap((matches) =>

@@ -105,7 +105,7 @@ export class Preinsert {
   // find a opmimal way to store all the schema into a object
   // without interfere with the 'dbTableInfo' object
   static async referees(matchesData: MatchParsed[]) {
-    const referees = await MatchDataParser.parseReferees(matchesData)
+    const referees = MatchDataParser.parseReferees(matchesData)
     const values = referees.map((referee) => {
       return [newUUID(), scapeQuote(referee)]
     })
