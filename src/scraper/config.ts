@@ -22,3 +22,4 @@ export const InsertionTables = [
   Entities.MatchLineUps,
   Entities.FullMatchTeamsMatchStats
 ]
+export const ANCHOR_MATCH_SELECTOR = '[data-testid="livescores-match"]'

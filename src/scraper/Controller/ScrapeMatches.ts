@@ -2,8 +2,8 @@ import { scrapeMatchResult } from '../parsers/footmob.parseMatch.js'
 import { newPage } from '../utils/createNewPage.js'
 import { writeData } from '../utils/writeFiles.js'
 import { MatchParsed } from '../types/Match.js'
-import { League } from '../types/match.Fotmob.js'
 import { ScrapeMatchesInput } from '../types/core.js'
+import { ANCHOR_MATCH_SELECTOR } from '../config.js'
 
 export async function ScrapeMatchesController({
   league,
@@ -27,7 +27,7 @@ export async function ScrapeMatchesController({
       { waitUntil: 'load' }
     )
 
-    const matchLinks = await page.$$eval('.e1ipnvj60', (links) => {
+    const matchLinks = await page.$$eval(ANCHOR_MATCH_SELECTOR, (links) => {
       return links.map((link) => link.getAttribute('href'))
     })
 
