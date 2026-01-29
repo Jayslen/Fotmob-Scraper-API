@@ -1,5 +1,5 @@
 {
-  "name": "football-results-api",
+  "name": "football-results",
   "version": "1.0.0",
   "author": "Jayslen Rojas Serrano",
   "main": "dist/index.js",
@@ -14,8 +14,9 @@
   "license": "ISC",
   "private": true,
   "scripts": {
+    "dev/scrapper": "bun ./src/scraper/main.ts",
     "build/scraper": "tsc -p tsconfig.scraper.json",
-    "scrapper": "bun ./src/scraper/main.ts",
+    "@scrapper": "bun ./dist/scraper/main.js",
     "test/file": "bun ./debug/test.ts",
     "create-db": "bun ./create_db.script.ts",
     "test": "echo \"Error: no test specified\" && exit 1"

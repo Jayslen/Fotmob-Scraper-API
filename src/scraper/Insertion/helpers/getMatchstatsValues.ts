@@ -3,14 +3,11 @@ import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 
 export function getMatchStatsValues(
   columns: string[],
-  statsData: (
-    | {
-        teams: string[]
-        matchUUID: string | undefined
-        stats: TeamMatchStatEntry[]
-      }
-    | undefined
-  )[],
+  statsData: {
+    teams: string[]
+    matchUUID: string | undefined
+    stats: TeamMatchStatEntry[] | undefined
+  }[],
   teamsDB: Map<string, string>
 ) {
   return statsData.flatMap((match) => {

@@ -3,7 +3,7 @@ export function generateMissingKeys(
   value: number,
   total: number
 ): [string, number][] {
-  const keys = [
+  const keys: [string, string][] = [
     ['won', 'lost'],
     ['accurate', 'inaccurate'],
     ['on_target', 'off_target']
