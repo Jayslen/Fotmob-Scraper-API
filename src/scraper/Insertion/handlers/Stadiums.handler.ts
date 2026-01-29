@@ -3,7 +3,7 @@ import { loadTeamsData } from '../../parsers/parseScrapedData.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
 import { newUUID } from '../utils/uuid.helper.js'
 import { Entities, InsertionArgs } from '../../types/core.js'
-import { dbTableInfo } from 'src/scraper/dbEntities.js'
+import { dbTableInfo } from '../../dbEntities.js'
 
 export async function insertStadiums(entity: InsertionArgs<Entities.Stadium>) {
   const { table, columns } = dbTableInfo[entity]

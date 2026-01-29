@@ -1,10 +1,10 @@
-import { dbTableInfo } from 'src/scraper/dbEntities.js'
+import { dbTableInfo } from '../../dbEntities.js'
 import { Entities, InsertionArgs } from '../../types/core.js'
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
-import { loadMatchesData } from 'src/scraper/parsers/parseScrapedData.js'
+import { loadMatchesData } from '../../parsers/parseScrapedData.js'
 
 export async function insertMatchLineups(
   entity: InsertionArgs<Entities.MatchLineUps>

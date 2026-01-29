@@ -1,9 +1,18 @@
 {
   "name": "football-results-api",
   "version": "1.0.0",
-  "type": "module",
-  "description": "A open source football API where the data are extract from Fotmob. The project is not intent to get beneficts with the data, its just for educational purpose and shared an API with dozens of people who wants to practice.",
+  "author": "Jayslen Rojas Serrano",
   "main": "dist/index.js",
+  "description": "A open source football API where the data are extract from Fotmob. The project is not intent to get beneficts with the data, its just for educational purpose and shared an API with dozens of people who wants to practice.",
+  "keywords": [
+    "nodejs",
+    "typescript",
+    "REST",
+    "API"
+  ],
+  "type": "module",
+  "license": "ISC",
+  "private": true,
   "scripts": {
     "build/scraper": "tsc -p tsconfig.scraper.json",
     "scrapper": "bun ./src/scraper/main.ts",
@@ -11,14 +20,6 @@
     "create-db": "bun ./create_db.script.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "nodejs",
-    "typescript",
-    "REST",
-    "API"
-  ],
-  "author": "Jayslen Rojas Serrano",
-  "license": "ISC",
   "devDependencies": {
     "@eslint/js": "9.39.1",
     "@tsconfig/node22": "22.0.2",
@@ -35,10 +36,7 @@
     "typescript-eslint": "8.46.3",
     "@types/bun": "latest"
   },
-  "dependencies": {
-    "commander": "14.0.2",
-    "inquirer": "12.11.0",
-    "playwright": "1.56.1"
-  },
-  "private": true
+  "workspaces": [
+    "src/*"
+  ]
 }

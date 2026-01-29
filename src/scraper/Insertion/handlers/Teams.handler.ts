@@ -4,7 +4,7 @@ import { loadTeamsData } from '../../parsers/parseScrapedData.js'
 import { Entities, InsertionArgs } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
-import { dbTableInfo } from 'src/scraper/dbEntities.js'
+import { dbTableInfo } from '../../dbEntities.js'
 
 export async function insertTeams(entity: InsertionArgs<Entities.Teams>) {
   const { table, columns } = dbTableInfo[entity]
