@@ -1,5 +1,5 @@
-import { Response } from 'playwright'
-import { Team } from '../types/teams.Fotmob.js'
+import type { Response } from 'playwright'
+import type { Team } from '../types/teams.Fotmob.js'
 
 export async function parseTeamData(team: Response) {
   const teamScrapeData = await team.json()
@@ -34,8 +34,8 @@ export async function parseTeamData(team: Response) {
       area: trophy.area,
       won: trophy.won,
       runnerup: trophy.runnerup,
-      season_won: trophy.season_won[0].split(','),
-      season_runnerup: trophy.season_runnerup[0].split(',')
+      season_won: trophy.season_won[0]?.split(','),
+      season_runnerup: trophy.season_runnerup[0]?.split(',')
     })),
     stadium: {
       name: venue.widget.name,

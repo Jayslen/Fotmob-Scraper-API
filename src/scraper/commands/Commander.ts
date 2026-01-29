@@ -1,11 +1,8 @@
 import { ScrapeMatchesController } from '../Controller/ScrapeMatches.js'
 import { ScrapeTeamsController } from '../Controller/ScrapeTeams.js'
 import { InsertionDB } from '../Controller/Insertion.js'
-import {
-  Entities,
-  ScrapeMatchesInput,
-  ScrapeTeamsInput
-} from '../types/core.js'
+import { Entities } from '../types/core.js'
+import type { ScrapeMatchesInput, ScrapeTeamsInput } from '../types/core.js'
 
 export class Commands {
   static async ScrapeMatches(input: ScrapeMatchesInput) {

@@ -29,7 +29,6 @@ program.action(async () => {
   ])
 
   if (mainAction === 'Scrape') {
-    console.log(Object.values(Actions))
     const { action, competition } = await inquirer.prompt([
       {
         type: 'rawlist',

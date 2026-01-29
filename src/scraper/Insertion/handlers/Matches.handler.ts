@@ -1,11 +1,12 @@
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
-import { Entities, InsertionArgs } from '../../types/core.js'
+import { Entities } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { Preinsert } from '../helpers/preinsert.js'
 import { dbTableInfo } from '../../dbEntities.js'
 import { PostInsertUpdates } from '../helpers/postinsert.updates.js'
+import type { InsertionArgs } from '../../types/core.js'
 
 export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
   const matchesData = await loadMatchesData()
@@ -28,8 +29,8 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
     round.matches.map((match) => {
       return [
         newUUID(),
-        uuidToSQLBinary(teamsDb.get(match.teams[0])),
-        uuidToSQLBinary(teamsDb.get(match.teams[1])),
+        uuidToSQLBinary(teamsDb.get(match.teams[0] ?? '')),
+        uuidToSQLBinary(teamsDb.get(match.teams[1] ?? '')),
         match.details.attendance ?? 'NULL',
         uuidToSQLBinary(seasonsDb.get(round.season)),
         uuidToSQLBinary(competitionsDb.get(round.league)),

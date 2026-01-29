@@ -1,4 +1,4 @@
-import { StatsByPeriod, TeamMatchStatEntry } from '../../types/core.js'
+import type { StatsByPeriod, TeamMatchStatEntry } from '../../types/core.js'
 import { buildPassesKey } from '../utils/buildPasseskey.js'
 
 export function buildStatsByPeriod(

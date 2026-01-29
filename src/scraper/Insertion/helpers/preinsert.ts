@@ -5,7 +5,7 @@ import { insertValues } from './dbQuery.js'
 import { MatchDataParser } from '../../parsers/matchDataParser.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
-import { MatchParsed } from '../../types/Match.js'
+import type { MatchParsed } from '../../types/Match.js'
 import { Entities } from '../../types/core.js'
 
 // class to held the method for pre-insert values that are required for the insertion of some entities

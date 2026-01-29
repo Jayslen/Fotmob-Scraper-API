@@ -1,10 +1,11 @@
 import { dbTableInfo } from '../../dbEntities.js'
-import { Entities, InsertionArgs } from '../../types/core.js'
+import { Entities } from '../../types/core.js'
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
+import type { InsertionArgs } from '../../types/core.js'
 
 export async function insertMatchLineups(
   entity: InsertionArgs<Entities.MatchLineUps>
@@ -32,8 +33,8 @@ export async function insertMatchLineups(
           }))
         ]
         const matchKey = getMatchKey(
-          mt.teams[0],
-          mt.teams[1],
+          mt.teams[0] ?? '',
+          mt.teams[1] ?? '',
           matches.league,
           matches.season,
           matches.round
@@ -41,7 +42,7 @@ export async function insertMatchLineups(
         const matchUUID = matchesDb.get(matchKey)
         return {
           id: Bun.randomUUIDv7(),
-          teamUUID: teamsDB.get(mt.teams[i]),
+          teamUUID: teamsDB.get(mt.teams[i] ?? ''),
           matchUUID,
           formation: ln.formation,
           players

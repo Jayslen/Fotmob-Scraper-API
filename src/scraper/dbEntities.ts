@@ -1,4 +1,5 @@
-import { DBTableInfoMap, Entities } from './types/core.js'
+import { Entities } from './types/core.js'
+import type { DBTableInfoMap } from './types/core.js'
 
 export const dbTableInfo: DBTableInfoMap = {
   countries: {

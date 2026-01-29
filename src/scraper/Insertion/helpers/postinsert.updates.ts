@@ -1,10 +1,10 @@
-import { MatchParsed } from '../../types/Match.js'
-import { PostInsertMethodParams } from '../../types/core.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
 import { PreloadDB } from './preload.js'
 import { insertValues } from './dbQuery.js'
 import { getGoalKey } from '../../utils/getGoalKey.js'
+import type { MatchParsed } from '../../types/Match.js'
+import type { PostInsertMethodParams } from '../../types/core.js'
 
 export class PostInsertUpdates {
   static async matchesGoals(input: PostInsertMethodParams) {
@@ -24,8 +24,8 @@ export class PostInsertUpdates {
               uuidToSQLBinary(
                 matchesDb.get(
                   getMatchKey(
-                    mt.teams[0],
-                    mt.teams[1],
+                    mt.teams[0] ?? '',
+                    mt.teams[1] ?? '',
                     matches.league,
                     matches.season,
                     matches.round
@@ -33,8 +33,8 @@ export class PostInsertUpdates {
                 )
               ),
               uuidToSQLBinary(playersDb.get(goal.name)),
-              uuidToSQLBinary(teamsDb.get(mt.teams[goal.scoredFor])),
-              uuidToSQLBinary(teamsDb.get(teamScoredAgainst)),
+              uuidToSQLBinary(teamsDb.get(mt.teams[goal.scoredFor] ?? '')),
+              uuidToSQLBinary(teamsDb.get(teamScoredAgainst ?? '')),
               goal.minute,
               goal.addedTime ?? 'NULL',
               goal.ownGoal ?? 'NULL',
@@ -62,14 +62,16 @@ export class PostInsertUpdates {
             g.map((goal) => {
               if (!goal.assistBy) return undefined
               const matchKey = getMatchKey(
-                mt.teams[0],
-                mt.teams[1],
+                mt.teams[0] ?? '',
+                mt.teams[1] ?? '',
                 matches.league,
                 matches.season,
                 matches.round
               )
               const matchUUID = matchesDb.get(matchKey)
-              const teamScoreForUUID = teamsDb.get(mt.teams[goal.scoredFor])
+              const teamScoreForUUID = teamsDb.get(
+                mt.teams[goal.scoredFor] ?? ''
+              )
               const assisterUUID = playersDb.get(goal.assistBy)
               const goalScorerUUID = playersDb.get(goal.name)
 
@@ -107,8 +109,8 @@ export class PostInsertUpdates {
       matches.matches.flatMap((mt) =>
         mt.matchCards.map((mc) => {
           const matchKey = getMatchKey(
-            mt.teams[0],
-            mt.teams[1],
+            mt.teams[0] ?? '',
+            mt.teams[1] ?? '',
             matches.league,
             matches.season,
             matches.round

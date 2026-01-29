@@ -1,5 +1,5 @@
-import { Response } from 'playwright'
-import { AllStat, ScrapeMatchData } from '../types/scraper.js'
+import type { Response } from 'playwright'
+import type { AllStat, ScrapeMatchData } from '../types/scraper.js'
 
 export async function scrapeMatchResult(matchResponse: Response) {
   const json = (await matchResponse.json()) as ScrapeMatchData

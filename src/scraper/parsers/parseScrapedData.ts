@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { Team, Teams } from '../types/Teams.js'
-import { MatchParsed } from 'src/scraper/types/Match.js'
+import type { Team, Teams } from '../types/Teams.js'
+import type { MatchParsed } from 'src/scraper/types/Match.js'
 
 interface TeamData extends Team {
   country: string

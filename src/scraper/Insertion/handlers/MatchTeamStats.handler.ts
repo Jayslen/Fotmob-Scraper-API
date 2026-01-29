@@ -1,11 +1,12 @@
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
-import { Entities, InsertionArgs } from '../../types/core.js'
+import { Entities } from '../../types/core.js'
 import { dbTableInfo } from '../../dbEntities.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
 import { buildStatsByPeriod } from '../helpers/buildStatsByPeriod.js'
 import { getMatchStatsValues } from '../helpers/getMatchstatsValues.js'
+import type { InsertionArgs } from '../../types/core.js'
 
 export async function insertMatchStats(
   entity: InsertionArgs<Entities.FullMatchTeamsMatchStats>
@@ -18,8 +19,8 @@ export async function insertMatchStats(
   const data = matchesData.flatMap((matches) =>
     matches.matches.map((mt) => {
       const matchKey = getMatchKey(
-        mt.teams[0],
-        mt.teams[1],
+        mt.teams[0] ?? '',
+        mt.teams[1] ?? '',
         matches.league,
         matches.season,
         matches.round

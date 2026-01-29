@@ -1,7 +1,7 @@
 import { PreloadDB } from '../Insertion/helpers/preload.js'
 import { normalizeDbColumnName } from '../Insertion/utils/dbColumnKey.js'
-import { MatchParsed } from '../types/Match.js'
 import { getMatchKey } from '../utils/getMatchKey.js'
+import type { MatchParsed } from '../types/Match.js'
 
 export class MatchDataParser {
   static async parseTeams(
@@ -94,8 +94,8 @@ export class MatchDataParser {
     const matchesStatsData = matchesData.flatMap((matches) =>
       matches.matches.map((mt) => {
         const matchKey = getMatchKey(
-          mt.teams[0],
-          mt.teams[1],
+          mt.teams[0] ?? '',
+          mt.teams[1] ?? '',
           matches.league,
           matches.season,
           matches.round

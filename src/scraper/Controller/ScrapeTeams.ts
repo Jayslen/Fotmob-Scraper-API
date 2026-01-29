@@ -2,7 +2,7 @@ import { parseTeamData } from '../parsers/fotmob.parseTeam.js'
 import { writeData } from '../utils/writeFiles.js'
 import { newPage } from '../utils/createNewPage.js'
 import { Area, Roles } from '../types/teams.Fotmob.js'
-import { ScrapeTeamsInput } from '../types/core.js'
+import type { ScrapeTeamsInput } from '../types/core.js'
 
 export async function ScrapeTeamsController(league: ScrapeTeamsInput) {
   const { page, browser } = await newPage()
@@ -22,6 +22,8 @@ export async function ScrapeTeamsController(league: ScrapeTeamsInput) {
         name: string
         birthDate: Date
         country: string
+        shirtNumber: number | undefined
+        height: number | null
         transferValue: number | undefined
         role: Roles
         positions: string[] | undefined
@@ -31,8 +33,8 @@ export async function ScrapeTeamsController(league: ScrapeTeamsInput) {
         area: Area[]
         won: string[]
         runnerup: string[]
-        season_won: string[]
-        season_runnerup: string[]
+        season_won: string[] | undefined
+        season_runnerup: string[] | undefined
       }[]
     }[]
   } = {

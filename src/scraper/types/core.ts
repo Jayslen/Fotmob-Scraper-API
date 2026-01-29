@@ -1,4 +1,4 @@
-import { MatchParsed } from './Match.js'
+import type { MatchParsed } from './Match.js'
 
 export type League = 'premier-league' | 'laliga' | 'serie' | 'bundesliga'
 

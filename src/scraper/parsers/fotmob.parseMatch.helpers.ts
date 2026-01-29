@@ -1,12 +1,5 @@
-import {
-  Card,
-  Description,
-  Key,
-  Period,
-  Reason,
-  StatKeyCategory
-} from '../types/Match.js'
-import {
+import { Card, Key, Period, Reason, StatKeyCategory } from '../types/Match.js'
+import type {
   AllStat,
   AwayTeam,
   AwayTeamGoals,
@@ -16,6 +9,7 @@ import {
   PlayerStat,
   StatsPeriods
 } from '../types/match.Fotmob.js'
+import type { Description } from '../types/Match.js'
 
 // do this function with flatMap instead flat().map()
 export function parseGoalscorer(teamGoals: [HomeTeamGoals, AwayTeamGoals]) {
