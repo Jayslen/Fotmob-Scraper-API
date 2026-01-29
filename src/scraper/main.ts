@@ -29,15 +29,16 @@ program.action(async () => {
   ])
 
   if (mainAction === 'Scrape') {
+    console.log(Object.values(Actions))
     const { action, competition } = await inquirer.prompt([
       {
-        type: 'list',
+        type: 'rawlist',
         choices: Object.values(Actions),
         name: 'action',
         message: 'What you want to scrape'
       },
       {
-        type: 'list',
+        type: 'rawlist',
         choices: LEAGUES_AVAILABLE.map((league) => league.name),
         name: 'competition',
         message: `Which competition do you want to scrape?`
@@ -47,7 +48,7 @@ program.action(async () => {
     if (action === Actions.Matches) {
       const answers = await inquirer.prompt([
         {
-          type: 'list',
+          type: 'rawlist',
           choices: ['2022-2023', '2023-2024', '2024-2025'],
           name: 'season',
           message: 'Which season do you want to scrape?'
