@@ -94,7 +94,6 @@ In this module i tried to follow a clean structure where the files are organized
 │   ├── createNewPage.ts
 │   ├── getGoalKey.ts
 │   ├── getMatchKey.ts
-│   ├── initializeBrowser.ts
 │   ├── scrapeMatch.ts
 │   └── writeFiles.ts
 │
