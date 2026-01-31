@@ -16,8 +16,7 @@ export async function scrapeMatchResult(matchResponse: Response) {
     general: { homeTeam, awayTeam, leagueName, matchRound },
     header: {
       status,
-      status: { halfs },
-      events: { awayTeamGoals, homeTeamGoals }
+      status: { halfs }
     },
     content: {
       stats: { Periods },
@@ -31,6 +30,9 @@ export async function scrapeMatchResult(matchResponse: Response) {
       }
     }
   } = json
+
+  const awayTeamGoals = json.header.events?.awayTeamGoals
+  const homeTeamGoals = json.header.events?.homeTeamGoals
 
   const parsedData: Match = {
     teams: [homeTeam.name, awayTeam.name],

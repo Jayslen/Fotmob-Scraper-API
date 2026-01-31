@@ -12,8 +12,11 @@ import type {
 import type { Description } from '../types/Match.js'
 
 // do this function with flatMap instead flat().map()
-export function parseGoalscorer(teamGoals: [HomeTeamGoals, AwayTeamGoals]) {
+export function parseGoalscorer(
+  teamGoals: [HomeTeamGoals | undefined, AwayTeamGoals | undefined]
+) {
   return teamGoals.map((teamGoalData) => {
+    if (!teamGoalData) return []
     const index = teamGoals.indexOf(teamGoalData) as 0 | 1
     if (!teamGoalData) return []
     return Object.values(teamGoalData)

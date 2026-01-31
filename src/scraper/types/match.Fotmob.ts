@@ -958,8 +958,8 @@ export interface Header {
 }
 
 export interface HeaderEvents {
-  homeTeamGoals: HomeTeamGoals
-  awayTeamGoals: AwayTeamGoals
+  homeTeamGoals?: HomeTeamGoals
+  awayTeamGoals?: AwayTeamGoals
   homeTeamRedCards: AwayTeamGoals
   awayTeamRedCards: AwayTeamGoals
 }

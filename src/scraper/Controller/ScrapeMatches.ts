@@ -15,6 +15,7 @@ export async function ScrapeMatchesController({
   console.log(`Starting to scrape matches for ${league.name} season ${season}`)
 
   for (let i = from; i <= to; i++) {
+    const errorMatches: string[] = []
     const matchesRound: MatchParsed = {
       league: league.name,
       round: i + 1,
@@ -44,9 +45,17 @@ export async function ScrapeMatchesController({
         matchesRound.matches.push(match)
         console.log(`${matchName} match scraped`)
       } catch (error) {
+        errorMatches.push(`https://www.fotmob.com/${link}`)
         console.log(`${matchName} Could not parse response as JSON`)
         // console.log(error)
       }
+    }
+    if (errorMatches.length > 0) {
+      await writeData({
+        data: JSON.stringify(errorMatches),
+        dir: `debug/${league.acrom}/${season}`,
+        fileName: `/${league.acrom}-week-${matchesRound.round}-errors.json`
+      })
     }
     console.log(
       `Matches for ${matchesRound.league} season ${season} round ${matchesRound.round} scraped`
