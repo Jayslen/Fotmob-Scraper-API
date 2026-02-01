@@ -29,7 +29,7 @@ export interface Details {
   secondHalfStarted: string
   firstHalfEnded: string
   secondHalfEnded: string
-  highlights: string
+  highlights?: string
   referee?: string
   league: League
   round: string

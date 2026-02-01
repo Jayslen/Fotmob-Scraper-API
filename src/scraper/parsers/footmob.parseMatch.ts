@@ -51,7 +51,7 @@ export async function scrapeMatchResult(matchResponse: Response) {
       secondHalfStarted: halfs.secondHalfStarted,
       firstHalfEnded: halfs.firstHalfEnded,
       secondHalfEnded: halfs.secondHalfEnded,
-      highlights: highlights.url,
+      highlights: highlights ? highlights.url : undefined,
       referee: Referee.text,
       league: leagueName as League,
       round: matchRound

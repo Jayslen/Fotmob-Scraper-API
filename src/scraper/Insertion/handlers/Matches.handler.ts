@@ -44,7 +44,7 @@ export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
         `STR_TO_DATE('${match.details.secondHalfStarted}', '%d.%m.%Y %H:%i:%s')`,
         `STR_TO_DATE('${match.details.firstHalfEnded}', '%d.%m.%Y %H:%i:%s')`,
         `STR_TO_DATE('${match.details.secondHalfEnded}', '%d.%m.%Y %H:%i:%s')`,
-        match.details.highlights,
+        match.details.highlights ?? 'NULL',
         match.details.referee
           ? uuidToSQLBinary(refereesDb.get(match.details.referee))
           : 'NULL',

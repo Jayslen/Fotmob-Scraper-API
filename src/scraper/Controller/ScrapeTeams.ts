@@ -10,7 +10,7 @@ export async function ScrapeTeamsController(league: ScrapeTeamsInput) {
     `https://www.fotmob.com/leagues/${league.id}/table/${league.acrom}`
   )
   console.log(`Starting scraping teams from ${league.name}`)
-  const teamsLinks = await page.$$eval('.e1ytqae11', (anchors) =>
+  const teamsLinks = await page.$$eval('.esi6yk81', (anchors) =>
     anchors.map((anchor) => anchor.getAttribute('href'))
   )
 

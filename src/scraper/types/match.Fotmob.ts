@@ -256,7 +256,7 @@ export interface Liveticker {
 
 export interface MatchFacts {
   matchId: number
-  highlights: Highlights
+  highlights?: Highlights
   playerOfTheMatch: PlayerOfTheMatch
   events: MatchFactsEvents
   infoBox: InfoBox
