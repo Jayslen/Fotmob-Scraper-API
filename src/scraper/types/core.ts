@@ -6,7 +6,7 @@ export type LeaguesAvailable = {
   acrom: League
   name: string
   id: number
-  country?: string
+  country: string
 }[]
 
 export enum Actions {

@@ -3,8 +3,9 @@ import { program } from 'commander'
 import { Commands } from './commands/Commander.js'
 import { parseAnswers } from './parsers/parseAnswers.js'
 import { LEAGUES_AVAILABLE } from './config.js'
-import { Actions } from './types/core.js'
 import { InsertionTables } from './config.js'
+import { Actions } from './types/core.js'
+import type { League } from './types/core.js'
 
 program
   .name('Scrape Football Results')
@@ -14,6 +15,23 @@ program
   )
 
 console.log('⚽ Ready to scrape football data!')
+
+program
+  .command('teams <league>')
+  .description('Fetch teams for a specific league')
+  .action(async (league: League) => {
+    const leagueSelected = LEAGUES_AVAILABLE.find(
+      (l) => l.acrom.toLowerCase() === league.toLowerCase()
+    )
+
+    if (!leagueSelected) {
+      console.error(`League ${league} not found`)
+      process.exit(1)
+    }
+
+    await Commands.ScrapeTeams(leagueSelected)
+    process.exit(0)
+  })
 
 program.action(async () => {
   const { mainAction } = await inquirer.prompt([
