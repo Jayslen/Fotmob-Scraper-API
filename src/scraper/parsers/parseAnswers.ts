@@ -24,8 +24,8 @@ export function parseAnswers(answers: any): {
       .split('-')
       .map((str) => parseInt(str.replaceAll(' ', '')))
 
-    from = fromStr ? fromStr - 1 : 0
-    to = toStr ? toStr - 1 : 38
+    from = fromStr ?? 0
+    to = toStr ?? 38
   }
 
   const league = LEAGUES_AVAILABLE.find((league) => league.name === competition)

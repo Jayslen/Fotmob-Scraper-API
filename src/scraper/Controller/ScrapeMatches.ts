@@ -14,7 +14,10 @@ export async function ScrapeMatchesController({
   const { page, browser } = await newPage()
   console.log(`Starting to scrape matches for ${league.name} season ${season}`)
 
-  for (let i = from; i <= to; i++) {
+  const startRound = from - 1
+  const endRound = to - 1
+
+  for (let i = startRound; i <= endRound; i++) {
     const errorMatches: { matchLink: string; error: string }[] = []
     const matchesRound: MatchParsed = {
       league: league.name,
@@ -22,6 +25,8 @@ export async function ScrapeMatchesController({
       season,
       matches: []
     }
+
+    console.log(`Scraping results for matchweek ${matchesRound.round}`)
 
     await page.goto(
       `https://www.fotmob.com/leagues/${league.id}/fixtures/${league.acrom}?season=${season}&group=by-round&round=${i}`,
@@ -55,7 +60,7 @@ export async function ScrapeMatchesController({
     }
     if (errorMatches.length > 0) {
       await Bun.write(
-        `debug/matchesErrors/${league.acrom}-round${matchesRound.round}-week-${matchesRound.round}-errors.json`,
+        `debug/matchesErrors/${league.acrom}-round-${matchesRound.round}-season-${matchesRound.season}-errors.json`,
         JSON.stringify(errorMatches)
       )
     }
