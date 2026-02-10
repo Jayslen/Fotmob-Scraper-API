@@ -13,6 +13,9 @@
   "type": "module",
   "license": "ISC",
   "private": true,
+  "bin": {
+    "scrape": "./dist/scraper/main.js"
+  },
   "scripts": {
     "dev/scrapper": "bun ./src/scraper/main.ts",
     "build/scraper": "tsc -p tsconfig.scraper.json",

@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 import inquirer from 'inquirer'
 import { program } from 'commander'
 import { Commands } from './commands/Commander.js'
@@ -6,6 +7,8 @@ import { LEAGUES_AVAILABLE } from './config.js'
 import { InsertionTables } from './config.js'
 import { Actions } from './types/core.js'
 import type { League } from './types/core.js'
+import { ValidateMatchSchema } from './schemas/Schemas.js'
+import { prettifyError } from 'zod'
 
 program
   .name('Scrape Football Results')
@@ -33,6 +36,50 @@ program
     process.exit(0)
   })
 
+program
+  .command('matches <league> <season>')
+  .description('Fetch Matches for a specific league and season')
+  .option('-r, --round <string>', 'Specify the round to scrape')
+  .option('-f, --from <number>', 'Specify the starting round')
+  .option('-t, --to <number>', 'Specify the ending round')
+  .action(async (league: unknown, season: unknown, options) => {
+    const { round, from, to } = options
+    const { success, data, error } = ValidateMatchSchema({
+      league,
+      season,
+      round,
+      from,
+      to
+    })
+
+    if (!success) {
+      console.log(prettifyError(error))
+      process.exit(1)
+    }
+
+    const {
+      league: { acrom, id, name },
+      season: parsedSeason,
+      from: start,
+      to: end,
+      round: roundSelected
+    } = data
+
+    let roundStart = roundSelected ?? start
+    let roundEnd = roundSelected ?? end
+
+    const params = {
+      league: { acrom, id, name },
+      season: parsedSeason,
+      from: roundStart,
+      to: roundEnd
+    }
+
+    await Commands.ScrapeMatches(params)
+
+    process.exit(0)
+  })
+
 program.action(async () => {
   const { mainAction } = await inquirer.prompt([
     {
@@ -49,13 +96,13 @@ program.action(async () => {
   if (mainAction === 'Scrape') {
     const { action, competition } = await inquirer.prompt([
       {
-        type: 'rawlist',
+        type: 'select',
         choices: Object.values(Actions),
         name: 'action',
         message: 'What you want to scrape'
       },
       {
-        type: 'rawlist',
+        type: 'select',
         choices: LEAGUES_AVAILABLE.map((league) => league.name),
         name: 'competition',
         message: `Which competition do you want to scrape?`
@@ -65,7 +112,7 @@ program.action(async () => {
     if (action === Actions.Matches) {
       const answers = await inquirer.prompt([
         {
-          type: 'rawlist',
+          type: 'select',
           choices: ['2022-2023', '2023-2024', '2024-2025'],
           name: 'season',
           message: 'Which season do you want to scrape?'
@@ -109,4 +156,4 @@ program.action(async () => {
   }
 })
 
-await program.parseAsync()
+await program.parseAsync(process.argv)
