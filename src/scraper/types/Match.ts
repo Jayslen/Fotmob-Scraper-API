@@ -16,7 +16,7 @@ export interface Match {
   matchFacts: MatchFacts
   matchCards: MatchCard[]
   teamsMatchStats: TeamsMatchStat[]
-  playerMatchStats: PlayerMatchStat[]
+  playerMatchStats?: PlayerMatchStat[]
 }
 
 export interface Details {
@@ -75,7 +75,7 @@ export interface Description {
 }
 
 export interface MatchFacts {
-  manOfTheMatch: string
+  manOfTheMatch?: string
   lineups: Lineup[]
 }
 

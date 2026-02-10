@@ -74,9 +74,12 @@ export function parseMatchTeamsStats(Periods: StatsPeriods) {
   }))
 }
 
-export function parsePlayerMatchStats(playerStats: {
-  [key: string]: PlayerStat
-}) {
+export function parsePlayerMatchStats(
+  playerStats: {
+    [key: string]: PlayerStat
+  } | null
+) {
+  if (playerStats === null) return undefined
   return Object.entries(playerStats).map(([key, data]) => ({
     player: data.name,
     stats: data.stats.flatMap((data) => {

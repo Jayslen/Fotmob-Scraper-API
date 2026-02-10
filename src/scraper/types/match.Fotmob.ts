@@ -14,7 +14,7 @@ export interface Content {
   superlive: Superlive
   buzz: null
   stats: ContentStats
-  playerStats: { [key: string]: PlayerStat }
+  playerStats: { [key: string]: PlayerStat } | null
   shotmap: Shotmap
   lineup: Lineup
   hasPlayoff: boolean
@@ -257,7 +257,7 @@ export interface Liveticker {
 export interface MatchFacts {
   matchId: number
   highlights?: Highlights
-  playerOfTheMatch: PlayerOfTheMatch
+  playerOfTheMatch: PlayerOfTheMatch | {}
   events: MatchFactsEvents
   infoBox: InfoBox
   teamForm: Array<TeamForm[]>

@@ -9,6 +9,7 @@ import {
 import { League, Surface } from '../types/Match.js'
 import type { ScrapeMatchData } from '../types/match.Fotmob.js'
 import type { Match } from '../types/Match.js'
+import { isPlayerOfTheMatch } from '../utils/verifyMOTM.js'
 
 export async function scrapeMatchResult(matchResponse: Response) {
   const json = (await matchResponse.json()) as ScrapeMatchData
@@ -31,6 +32,9 @@ export async function scrapeMatchResult(matchResponse: Response) {
     }
   } = json
 
+  const normalizedPlayerOfTheMatch = isPlayerOfTheMatch(playerOfTheMatch)
+    ? playerOfTheMatch
+    : undefined
   const awayTeamGoals = json.header.events?.awayTeamGoals
   const homeTeamGoals = json.header.events?.homeTeamGoals
 
@@ -57,7 +61,7 @@ export async function scrapeMatchResult(matchResponse: Response) {
       round: matchRound
     },
     matchFacts: {
-      manOfTheMatch: playerOfTheMatch.name.fullName,
+      manOfTheMatch: normalizedPlayerOfTheMatch?.name.fullName,
       lineups: parseLineups([homeTeamLineup, awayTeamLineup])
     },
     matchCards: parseMatchCards(matchEvents),
