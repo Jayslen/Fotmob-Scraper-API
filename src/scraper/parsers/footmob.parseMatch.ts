@@ -20,7 +20,7 @@ export async function scrapeMatchResult(matchResponse: Response) {
       status: { halfs }
     },
     content: {
-      stats: { Periods },
+      stats,
       lineup: { homeTeam: homeTeamLineup, awayTeam: awayTeamLineup },
       playerStats,
       matchFacts: {
@@ -65,7 +65,7 @@ export async function scrapeMatchResult(matchResponse: Response) {
       lineups: parseLineups([homeTeamLineup, awayTeamLineup])
     },
     matchCards: parseMatchCards(matchEvents),
-    teamsMatchStats: parseMatchTeamsStats(Periods),
+    teamsMatchStats: parseMatchTeamsStats(stats?.Periods),
     playerMatchStats: parsePlayerMatchStats(playerStats)
   }
   return parsedData

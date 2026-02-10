@@ -849,7 +849,7 @@ export interface ShotmapPeriods {
 }
 
 export interface ContentStats {
-  Periods: StatsPeriods
+  Periods?: StatsPeriods
 }
 
 export interface StatsPeriods {

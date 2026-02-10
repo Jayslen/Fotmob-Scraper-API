@@ -61,7 +61,8 @@ export function parseMatchCards(matchEvents: EventsEvent[]) {
     }))
 }
 
-export function parseMatchTeamsStats(Periods: StatsPeriods) {
+export function parseMatchTeamsStats(Periods?: StatsPeriods) {
+  if (!Periods) return []
   return Object.entries(Periods).map((stat) => ({
     period: stat[0] as unknown as Period,
     stats: stat[1].stats.map((childStat: AllStat) => ({
