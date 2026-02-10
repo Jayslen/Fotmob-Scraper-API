@@ -21,8 +21,10 @@ export async function insertPlayerMatchStats(
   const matchesData = await loadMatchesData()
 
   const values = matchesData.flatMap((matches) =>
-    matches.matches.flatMap((mt) =>
-      mt.playerMatchStats.map((ps) => {
+    matches.matches.flatMap((mt) => {
+      const { playerMatchStats } = mt
+      if (!playerMatchStats) return []
+      return playerMatchStats.map((ps) => {
         const playerUUID = playersDb.get(ps.player)
         const matchKey = getMatchKey(
           mt.teams[0] ?? '',
@@ -53,7 +55,7 @@ export async function insertPlayerMatchStats(
         })
         return statsValues
       })
-    )
+    })
   )
   await insertValues(table, columns, values, 'playerMatchStats')
 }
