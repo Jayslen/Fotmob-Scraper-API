@@ -22,6 +22,10 @@ console.log('⚽ Ready to scrape football data!')
 program
   .command('teams <league>')
   .description('Fetch teams for a specific league')
+  .addHelpText(
+    'afterAll',
+    `<league> parameter: ${LEAGUES_AVAILABLE.map((l) => l.acrom).join(', ')} (e.g.) scraper teams laliga`
+  )
   .action(async (league: League) => {
     const leagueSelected = LEAGUES_AVAILABLE.find(
       (l) => l.acrom.toLowerCase() === league.toLowerCase()
@@ -39,6 +43,12 @@ program
 program
   .command('matches <league> <season>')
   .description('Fetch Matches for a specific league and season')
+  .addHelpText(
+    'afterAll',
+    `<league> parameter: ${LEAGUES_AVAILABLE.map((l) => l.acrom).join(', ')}`
+  )
+  .addHelpText('afterAll', '<season> parameter: 2023-2024')
+  .addHelpText('afterAll', '(e.g.) scraper matches laliga 2023-2024 1')
   .option('-r, --round <string>', 'Specify the round to scrape')
   .option('-f, --from <number>', 'Specify the starting round')
   .option('-t, --to <number>', 'Specify the ending round')
@@ -77,6 +87,23 @@ program
 
     await Commands.ScrapeMatches(params)
 
+    process.exit(0)
+  })
+
+program
+  .command('insert <entities>')
+  .description('Insert data into the database specifying the entities')
+  .addHelpText(
+    'afterAll',
+    '<entities> parameter: countries, stadiums, teams, players, matches, matchLineUps, playerMatchStats,fullMatchTeamStats. (e.g.) scraper insert teams,players'
+  )
+  .action(async (entities) => {
+    const entitiesArray = entities.split(',')
+    if (entitiesArray.length === 0) {
+      console.error('No entities provided')
+      process.exit(1)
+    }
+    await Commands.Insertion(entitiesArray)
     process.exit(0)
   })
 

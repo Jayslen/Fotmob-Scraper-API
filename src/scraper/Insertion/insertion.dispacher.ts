@@ -42,5 +42,7 @@ export async function handleInsertion(input: InsertionArgs<Entities>) {
     case FullMatchTeamsMatchStats: {
       return insertMatchStats(input)
     }
+    default:
+      console.error(`Unknown entity ${input}`)
   }
 }
