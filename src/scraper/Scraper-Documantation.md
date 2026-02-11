@@ -36,10 +36,12 @@ In this module i tried to follow a clean structure where the files are organized
 
 ```text
 .
-├── commands
-│   └── Commander.ts - Entry Point of the module that holds the CLI options.
+├── cli - Held all the commands and utilities for the CLI.
+│   ├── commands.ts - Inline commands for the CLI.
+│   ├── interactive.ts - Interactive mode for the CLI.
+│   └── validationSchema.ts
 │
-├── Controller - Functions to handle the data extraction and insertion process.
+├── application - Functions to handle the data extraction and insertion process.
 │   ├── Insertion.ts
 │   ├── ScrapeMatches.ts
 │   └── ScrapeTeams.ts

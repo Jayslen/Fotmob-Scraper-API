@@ -17,7 +17,7 @@
     "scrape": "./dist/scraper/main.js"
   },
   "scripts": {
-    "dev/scrapper": "bun ./src/scraper/main.ts",
+    "dev/scraper": "bun ./src/scraper/main.ts",
     "build/scraper": "tsc -p tsconfig.scraper.json",
     "@scrapper": "bun ./dist/scraper/main.js",
     "test/file": "bun ./debug/test.ts",

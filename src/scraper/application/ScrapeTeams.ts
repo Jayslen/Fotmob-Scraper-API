@@ -4,7 +4,7 @@ import { newPage } from '../utils/createNewPage.js'
 import { Area, Roles } from '../types/teams.Fotmob.js'
 import type { ScrapeTeamsInput } from '../types/core.js'
 
-export async function ScrapeTeamsController(league: ScrapeTeamsInput) {
+export async function ScrapeTeams(league: ScrapeTeamsInput) {
   const { page, browser } = await newPage()
   await page.goto(
     `https://www.fotmob.com/leagues/${league.id}/table/${league.acrom}`
