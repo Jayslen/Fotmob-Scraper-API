@@ -9,6 +9,37 @@ Before start to explain how the module works, it is important to mention somethi
 > [!IMPORTANT]
 > The data scrape from [Fotmob](https://www.fotmob.com/) is not intended to use it for any commercial purpose. The main and only purpose is to provide an open-source project for educational purposes.
 
+## Scripts
+
+> [!NOTE]
+> The scripts are meant to be run from the root directory.
+
+### Run scraper from typescript code
+
+```bash
+bun run dev/scrape
+```
+
+### Transpile typescript code to javascript
+
+It creates a directory dist with the transpile code
+
+```bash
+bun run build/scraper
+```
+
+### Run scraper from transpiled code
+
+```bash
+bun run scraper
+```
+
+### Lint scraper
+
+```bash
+bun run lint/scraper
+```
+
 ## What it does?
 
 Well as mentioned before, this module handle all the scraping process and insert the data into a database.
@@ -84,19 +115,29 @@ In this module i tried to follow a clean structure where the files are organized
 │   ├── parseAnswers.ts
 │   └── parseScrapedData.ts
 │
-├── types
-│   ├── core.ts
-│   ├── match.Fotmob.ts
-│   ├── Match.ts
-│   ├── scraper.ts
-│   ├── teams.Fotmob.ts
-│   └── Teams.ts
-│
+├── types - Types used for the application
+│   ├── application
+│   │   ├── core.ts
+│   │   ├── Match.ts
+│   │   └── Teams.ts
+│   ├── database
+│   │   ├── dbTable.ts
+│   │   ├── entities.ts
+│   │   └── postInsert.ts
+│   ├── domain
+│   │   ├── league.ts
+│   │   └── stats.ts
+│   ├── fotmob
+│       ├── match.Fotmob.ts
+│       └── teams.Fotmob.ts
+|
 ├── utils - General utils
 │   ├── createNewPage.ts
 │   ├── getGoalKey.ts
 │   ├── getMatchKey.ts
+│   ├── parseRoundString
 │   ├── scrapeMatch.ts
+│   ├── verifyMOTM.ts
 │   └── writeFiles.ts
 │
 ├── bun.lock

@@ -1,7 +1,7 @@
 import db from '../../dbInstance.js'
 import { getGoalKey } from '../../utils/getGoalKey.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
-import { ENTITIES_VIEWS } from '../../types/core.js'
+import { ENTITIES_VIEWS } from '../../types/database/entities.js'
 import { getViewQuery } from '../utils/generateViewQuery.js'
 
 const countriesMap = new Map<string, string>()

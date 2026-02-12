@@ -1,4 +1,4 @@
-import type { TeamMatchStatEntry } from '../../types/core.js'
+import type { TeamMatchStatEntry } from '../../types/domain/stats'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 
 export function getMatchStatsValues(
@@ -24,6 +24,7 @@ export function getMatchStatsValues(
 
     return match.teams.map((team, teamIndex) =>
       columns.map((column) => {
+        const value = statMap.get(column)?.[teamIndex]
         switch (column) {
           case 'id':
             return newUUID()
@@ -35,7 +36,6 @@ export function getMatchStatsValues(
             return uuidToSQLBinary(match.matchUUID)
 
           default:
-            const value = statMap.get(column)?.[teamIndex]
             // Split it because the value comes as:
             // eg:["23 (43%)"]
             if (typeof value === 'string') {

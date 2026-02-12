@@ -6,13 +6,13 @@ import {
   parseMatchTeamsStats,
   parsePlayerMatchStats
 } from './fotmob.parseMatch.helpers.js'
-import { League, Surface } from '../types/Match.js'
-import type { ScrapeMatchData } from '../types/match.Fotmob.js'
-import type { Match } from '../types/Match.js'
+import { League, Surface } from '../types/application/Match.js'
+import type { FootmobMatchData } from '../types/fotmob/match.Fotmob.js'
+import type { Match } from '../types/application/Match.js'
 import { isPlayerOfTheMatch } from '../utils/verifyMOTM.js'
 
 export async function scrapeMatchResult(matchResponse: Response) {
-  const json = (await matchResponse.json()) as ScrapeMatchData
+  const json = (await matchResponse.json()) as FootmobMatchData
   const {
     general: { homeTeam, awayTeam, leagueName, matchRound },
     header: {

@@ -1,5 +1,5 @@
 import inquirer from 'inquirer'
-import { Actions } from '../types/core'
+import { Actions } from '../types/application/core'
 import { InsertionTables, LEAGUES_AVAILABLE } from '../config'
 import { parseAnswers } from '../parsers/parseAnswers'
 import { ScrapeTeams } from '../application/ScrapeTeams'

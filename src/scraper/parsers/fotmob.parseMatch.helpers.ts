@@ -1,4 +1,10 @@
-import { Card, Key, Period, Reason, StatKeyCategory } from '../types/Match.js'
+import {
+  Card,
+  Key,
+  Period,
+  Reason,
+  StatKeyCategory
+} from '../types/application/Match.js'
 import type {
   AllStat,
   AwayTeam,
@@ -8,8 +14,8 @@ import type {
   HomeTeamGoals,
   PlayerStat,
   StatsPeriods
-} from '../types/match.Fotmob.js'
-import type { Description } from '../types/Match.js'
+} from '../types/fotmob/match.Fotmob.js'
+import type { Description } from '../types/application/Match.js'
 
 // do this function with flatMap instead flat().map()
 export function parseGoalscorer(
@@ -81,7 +87,7 @@ export function parsePlayerMatchStats(
   } | null
 ) {
   if (playerStats === null) return undefined
-  return Object.entries(playerStats).map(([key, data]) => ({
+  return Object.entries(playerStats).map(([, data]) => ({
     player: data.name,
     stats: data.stats.flatMap((data) => {
       return Object.entries(data.stats).map(([key, values]) => {

@@ -2,9 +2,9 @@ import { insertValues } from '../helpers/dbQuery.js'
 import { loadTeamsData } from '../../parsers/parseScrapedData.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
 import { newUUID } from '../utils/uuid.helper.js'
-import { Entities } from '../../types/core.js'
+import { Entities } from '../../types/database/entities.js'
 import { dbTableInfo } from '../../dbEntities.js'
-import type { InsertionArgs } from '../../types/core.js'
+import type { InsertionArgs } from '../../types/application/core.js'
 
 export async function insertStadiums(entity: InsertionArgs<Entities.Stadium>) {
   const { table, columns } = dbTableInfo[entity]

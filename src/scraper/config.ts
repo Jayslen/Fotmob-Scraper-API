@@ -1,5 +1,5 @@
-import { Entities } from './types/core.js'
-import type { LeaguesAvailable } from './types/core.js'
+import { Entities } from './types/database/entities'
+import type { LeaguesAvailable } from './types/domain/league'
 
 export const LEAGUES_AVAILABLE: LeaguesAvailable = [
   {

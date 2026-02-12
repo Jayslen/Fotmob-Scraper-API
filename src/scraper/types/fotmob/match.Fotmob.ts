@@ -1,4 +1,6 @@
-export interface ScrapeMatchData {
+import type { EmptyObject } from 'node_modules/zod/v4/core/util.cjs'
+
+export interface FootmobMatchData {
   general: General
   header: Header
   nav: string[]
@@ -257,7 +259,7 @@ export interface Liveticker {
 export interface MatchFacts {
   matchId: number
   highlights?: Highlights
-  playerOfTheMatch: PlayerOfTheMatch | {}
+  playerOfTheMatch: PlayerOfTheMatch | EmptyObject
   events: MatchFactsEvents
   infoBox: InfoBox
   teamForm: Array<TeamForm[]>

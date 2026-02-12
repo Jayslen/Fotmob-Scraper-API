@@ -1,5 +1,5 @@
-import { Entities } from './types/core.js'
-import type { DBTableInfoMap } from './types/core.js'
+import { Entities } from './types/database/entities'
+import type { DBTableInfoMap } from './types/database/dbTable'
 
 export const dbTableInfo: DBTableInfoMap = {
   countries: {

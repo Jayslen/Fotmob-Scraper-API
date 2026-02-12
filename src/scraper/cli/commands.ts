@@ -4,7 +4,7 @@ import { ScrapeTeams } from '../application/ScrapeTeams'
 import { ScrapeMatches } from '../application/ScrapeMatches'
 import { InsertionDB } from '../application/Insertion'
 import { LEAGUES_AVAILABLE } from '../config.js'
-import type { Entities } from '../types/core'
+import type { Entities } from '../types/database/entities'
 import { ValidateMatchSchema } from './validationSchema'
 
 export function registerCommands(program: Command) {
@@ -64,8 +64,8 @@ export function registerCommands(program: Command) {
         round: roundSelected
       } = data
 
-      let roundStart = roundSelected ?? start
-      let roundEnd = roundSelected ?? end
+      const roundStart = roundSelected ?? start
+      const roundEnd = roundSelected ?? end
 
       const params = {
         league: { acrom, id, name },

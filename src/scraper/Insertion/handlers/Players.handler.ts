@@ -3,9 +3,9 @@ import { PreloadDB } from '../helpers/preload.js'
 import { loadTeamsData } from '../../parsers/parseScrapedData.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { scapeQuote } from '../utils/scapeSqlQuote.js'
-import { Entities } from '../../types/core.js'
+import { Entities } from '../../types/database/entities.js'
 import { dbTableInfo } from '../../dbEntities.js'
-import type { InsertionArgs } from '../../types/core.js'
+import type { InsertionArgs } from '../../types/application/core.js'
 
 export async function insertPlayers(entity: InsertionArgs<Entities.Players>) {
   const { table, columns, dependenciesTables } = dbTableInfo[entity]

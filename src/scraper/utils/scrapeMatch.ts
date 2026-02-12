@@ -1,31 +1,41 @@
 import type { Response } from 'playwright'
-import type { AllStat, ScrapeMatchData } from '../types/scraper.js'
+import type { AllStat, FootmobMatchData } from '../types/fotmob/match.Fotmob.js'
+import { isPlayerOfTheMatch } from './verifyMOTM.js'
 
 export async function scrapeMatchResult(matchResponse: Response) {
-  const json = (await matchResponse.json()) as ScrapeMatchData
+  const json = (await matchResponse.json()) as FootmobMatchData
+  const normalizedPlayerOfTheMatch = isPlayerOfTheMatch(
+    json.content.matchFacts.playerOfTheMatch
+  )
+    ? json.content.matchFacts.playerOfTheMatch
+    : null
   const parsedData = {
     teams: [json.general.homeTeam.name, json.general.awayTeam.name],
     goals: [
-      Object.values(json.header.events.homeTeamGoals)
-        .flat()
-        .map((player) => ({
-          name: player.fullName,
-          ownGoal: player.ownGoal,
-          minute: player.time,
-          addedTime: player.overloadTime,
-          penalty: player.penShootoutScore,
-          assistBy: player.assistInput
-        })),
-      Object.values(json.header.events.awayTeamGoals)
-        .flat()
-        .map((player) => ({
-          name: player.fullName,
-          ownGoal: player.ownGoal,
-          minute: player.time,
-          addedTime: player.overloadTime,
-          penalty: player.penShootoutScore,
-          assistBy: player.assistInput
-        }))
+      json.header.events?.homeTeamGoals
+        ? Object.values(json.header.events.homeTeamGoals)
+            .flat()
+            .map((player) => ({
+              name: player.fullName,
+              ownGoal: player.ownGoal,
+              minute: player.time,
+              addedTime: player.overloadTime,
+              penalty: player.penShootoutScore,
+              assistBy: player.assistInput
+            }))
+        : [],
+      json.header.events?.awayTeamGoals
+        ? Object.values(json.header.events.awayTeamGoals)
+            .flat()
+            .map((player) => ({
+              name: player.fullName,
+              ownGoal: player.ownGoal,
+              minute: player.time,
+              addedTime: player.overloadTime,
+              penalty: player.penShootoutScore,
+              assistBy: player.assistInput
+            }))
+        : []
     ],
     details: {
       stadium: {
@@ -41,13 +51,13 @@ export async function scrapeMatchResult(matchResponse: Response) {
       secondHalfStarted: json.header.status.halfs.secondHalfStarted,
       firstHalfEnded: json.header.status.halfs.firstHalfEnded,
       secondHalfEnded: json.header.status.halfs.secondHalfEnded,
-      highlights: json.content.matchFacts.highlights.url,
+      highlights: json.content.matchFacts?.highlights?.url,
       referee: json.content.matchFacts.infoBox.Referee.text,
       league: json.general.leagueName,
       round: json.general.matchRound
     },
     matchFacts: {
-      manOfTheMatch: json.content.matchFacts.playerOfTheMatch.name.fullName,
+      manOfTheMatch: normalizedPlayerOfTheMatch?.name.fullName,
       lineups: [
         {
           formation: json.content.lineup.homeTeam.formation,
@@ -88,16 +98,18 @@ export async function scrapeMatchResult(matchResponse: Response) {
         card: event.card,
         description: event.cardDescription
       })),
-    teamsMatchStats: Object.entries(json.content.stats.Periods).map((stat) => ({
-      period: stat[0],
-      stats: stat[1].stats.map((childStat: AllStat) => ({
-        category: childStat.title,
-        stats: childStat.stats.map((data) => ({
-          name: data.title,
-          value: data.stats
+    teamsMatchStats: json.content.stats.Periods
+      ? Object.entries(json.content.stats.Periods).map((stat) => ({
+          period: stat[0],
+          stats: stat[1].stats.map((childStat: AllStat) => ({
+            category: childStat.title,
+            stats: childStat.stats.map((data) => ({
+              name: data.title,
+              value: data.stats
+            }))
+          }))
         }))
-      }))
-    }))
+      : []
   }
   return parsedData
 }

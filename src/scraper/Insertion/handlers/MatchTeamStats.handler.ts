@@ -1,12 +1,12 @@
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
-import { Entities } from '../../types/core.js'
+import { Entities } from '../../types/database/entities.js'
+import type { InsertionArgs } from '../../types/application/core.js'
 import { dbTableInfo } from '../../dbEntities.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
 import { buildStatsByPeriod } from '../helpers/buildStatsByPeriod.js'
 import { getMatchStatsValues } from '../helpers/getMatchstatsValues.js'
-import type { InsertionArgs } from '../../types/core.js'
 
 export async function insertMatchStats(
   entity: InsertionArgs<Entities.FullMatchTeamsMatchStats>

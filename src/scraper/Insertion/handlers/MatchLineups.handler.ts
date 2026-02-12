@@ -1,11 +1,11 @@
 import { dbTableInfo } from '../../dbEntities.js'
-import { Entities } from '../../types/core.js'
+import { Entities } from '../../types/database/entities.js'
+import type { InsertionArgs } from '../../types/application/core.js'
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { getMatchKey } from '../../utils/getMatchKey.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
-import type { InsertionArgs } from '../../types/core.js'
 
 export async function insertMatchLineups(
   entity: InsertionArgs<Entities.MatchLineUps>

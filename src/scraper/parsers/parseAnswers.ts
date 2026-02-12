@@ -12,8 +12,8 @@ export function parseAnswers(answers: any): {
     rounds: string
     competition: string
   }
-  let from = 0,
-    to = 38
+  let from = 0
+  let to = 38
 
   if (rounds.length <= 2) {
     const singleRound = parseInt(rounds.replaceAll(' ', '')) - 1

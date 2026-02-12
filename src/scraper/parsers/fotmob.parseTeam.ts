@@ -1,5 +1,5 @@
 import type { Response } from 'playwright'
-import type { Team } from '../types/teams.Fotmob.js'
+import type { FotmobTeamData } from '../types/fotmob/teams.Fotmob.js'
 
 export async function parseTeamData(team: Response) {
   const teamScrapeData = await team.json()
@@ -7,7 +7,7 @@ export async function parseTeamData(team: Response) {
     squad,
     history: { trophyList },
     overview: { venue }
-  } = teamScrapeData as Team
+  } = teamScrapeData as FotmobTeamData
 
   const {
     Surface,

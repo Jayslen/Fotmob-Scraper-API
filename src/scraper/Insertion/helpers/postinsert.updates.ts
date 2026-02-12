@@ -3,8 +3,8 @@ import { getMatchKey } from '../../utils/getMatchKey.js'
 import { PreloadDB } from './preload.js'
 import { insertValues } from './dbQuery.js'
 import { getGoalKey } from '../../utils/getGoalKey.js'
-import type { MatchParsed } from '../../types/Match.js'
-import type { PostInsertMethodParams } from '../../types/core.js'
+import type { MatchParsed } from '../../types/application/Match.js'
+import type { PostInsertMethodParams } from '../../types/application/core.js'
 
 export class PostInsertUpdates {
   static async matchesGoals(input: PostInsertMethodParams) {

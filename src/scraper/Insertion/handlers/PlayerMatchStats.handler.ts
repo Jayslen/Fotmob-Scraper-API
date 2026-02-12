@@ -1,6 +1,6 @@
 import { dbTableInfo } from '../../dbEntities.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
-import { Entities } from '../../types/core.js'
+import { Entities } from '../../types/database/entities.js'
 import { insertValues } from '../helpers/dbQuery.js'
 import { generateMissingKeys } from '../helpers/missingPlayerStats.js'
 import { PreloadDB } from '../helpers/preload.js'
@@ -8,7 +8,7 @@ import { getMatchKey } from '../../utils/getMatchKey.js'
 import { newUUID } from '../utils/uuid.helper.js'
 import { normalizeDbColumnName } from '../utils/dbColumnKey.js'
 import { buildPlayerStatKey } from '../helpers/buildPlayerMatchstatKey.js'
-import type { InsertionArgs } from '../../types/core.js'
+import type { InsertionArgs } from '../../types/application/core.js'
 
 export async function insertPlayerMatchStats(
   entity: InsertionArgs<Entities.PlayerMatchStats>

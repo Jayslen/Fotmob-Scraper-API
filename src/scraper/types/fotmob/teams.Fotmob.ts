@@ -1,4 +1,4 @@
-export interface Team {
+export interface FotmobTeamData {
   squad: Squad
   history: {
     trophyList: TrophyList[]

@@ -1,7 +1,7 @@
 import { PreloadDB } from '../Insertion/helpers/preload.js'
 import { normalizeDbColumnName } from '../Insertion/utils/dbColumnKey.js'
 import { getMatchKey } from '../utils/getMatchKey.js'
-import type { MatchParsed } from '../types/Match.js'
+import type { MatchParsed } from '../types/application/Match.js'
 
 export class MatchDataParser {
   static async parseTeams(

@@ -1,12 +1,12 @@
 import { insertValues } from '../helpers/dbQuery.js'
 import { PreloadDB } from '../helpers/preload.js'
 import { loadMatchesData } from '../../parsers/parseScrapedData.js'
-import { Entities } from '../../types/core.js'
+import { Entities } from '../../types/database/entities.js'
+import type { InsertionArgs } from '../../types/application/core.js'
 import { newUUID, uuidToSQLBinary } from '../utils/uuid.helper.js'
 import { Preinsert } from '../helpers/preinsert.js'
 import { dbTableInfo } from '../../dbEntities.js'
 import { PostInsertUpdates } from '../helpers/postinsert.updates.js'
-import type { InsertionArgs } from '../../types/core.js'
 
 export async function insertMatches(entity: InsertionArgs<Entities.Matches>) {
   const matchesData = await loadMatchesData()

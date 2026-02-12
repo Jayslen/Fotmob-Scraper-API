@@ -2,8 +2,8 @@ import { scrapeMatchResult } from '../parsers/footmob.parseMatch.js'
 import { newPage } from '../utils/createNewPage.js'
 import { writeData } from '../utils/writeFiles.js'
 import { ANCHOR_MATCH_SELECTOR } from '../config.js'
-import type { MatchParsed } from '../types/Match.js'
-import type { ScrapeMatchesInput } from '../types/core.js'
+import type { MatchParsed } from '../types/application/Match.js'
+import type { ScrapeMatchesInput } from '../types/application/core.js'
 
 export async function ScrapeMatches({
   league,

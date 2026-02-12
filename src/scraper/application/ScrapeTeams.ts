@@ -1,8 +1,8 @@
 import { parseTeamData } from '../parsers/fotmob.parseTeam.js'
 import { writeData } from '../utils/writeFiles.js'
 import { newPage } from '../utils/createNewPage.js'
-import { Area, Roles } from '../types/teams.Fotmob.js'
-import type { ScrapeTeamsInput } from '../types/core.js'
+import { Area, Roles } from '../types/fotmob/teams.Fotmob.js'
+import type { ScrapeTeamsInput } from '../types/application/core.js'
 
 export async function ScrapeTeams(league: ScrapeTeamsInput) {
   const { page, browser } = await newPage()
